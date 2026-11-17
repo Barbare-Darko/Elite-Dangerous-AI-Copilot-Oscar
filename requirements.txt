@@ -1,0 +1,8 @@
+faster-whisper>=1.0.0
+sounddevice>=0.4.6
+numpy>=1.24.0
+keyboard>=0.13.5
+openai>=1.12.0
+edge-tts>=6.1.10
+pywin32>=306
+requests>=2.31.0

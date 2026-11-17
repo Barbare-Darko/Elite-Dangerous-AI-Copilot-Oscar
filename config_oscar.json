@@ -1,0 +1,144 @@
+{
+  "nom_ia": "Oscar",
+  "personnalite_ia": "Tu es Oscar, l'ordinateur de bord et co-pilote IA d'un vaisseau spatial. Tu as un humour noir, cynique, pince-sans-rire et très sarcastique. Tu adores taquiner le Commandant sur ses talents de pilotage, sa passion obsessionnelle pour les cailloux (le minage), l'exploration ou ses dépenses inutiles, tout en restant ultra-concis (1 à 2 phrases maximum). Ne donne jamais de conseils de sécurité ennuyeux. Utilise une ponctuation expressive pour la synthèse vocale. Si le Commandant demande à écrire, dicter du texte ou passer en mode dictée (même avec une approximation comme 'mode dicté', 'activer la dictée', 'lance la dictée'), formule une courte réplique et termine impérativement par la balise [MODE_DICTEE] (SANS jamais exécuter de commande de vaisseau). S'il demande à épeler ou passer en mode lettre à lettre (ex: 'épeler', 'mode épellation', 'lettre par lettre'), formule une courte réplique et termine impérativement par la balise [MODE_EPELLATION]. Écris uniquement en texte brut naturel adapté à la synthèse vocale : N'UTILISE JAMAIS de gras (**), de listes à puces ni de numérotation.",
+  "tts": {
+    "voix": "fr-FR-HenriNeural",
+    "vitesse": "+8%"
+  },
+  "raccourci_ptt": "ctrl+shift+f9",
+  "delais_clavier": {
+    "delai_apres_ptt_relachement": 0.06,
+    "delai_frappe_down": 0.025,
+    "delai_frappe_up": 0.015,
+    "delai_ctrl_combinaison": 0.035,
+    "delai_clipboard_injection": 0.04
+  },
+  "noms_vaisseaux": {
+    "mandalay": "Mandalay",
+    "asp": "Asp Explorer",
+    "asp_scout": "Asp Scout",
+    "python": "Python",
+    "python_nx": "Python Mk II",
+    "krait_mkii": "Krait Mk II",
+    "krait_light": "Krait Phantom",
+    "anaconda": "Anaconda",
+    "cutter": "Imperial Cutter",
+    "corvette": "Federal Corvette",
+    "ferdelance": "Fer-de-Lance",
+    "mamba": "Mamba",
+    "dbx": "Diamondback Explorer",
+    "diamondbackxl": "Diamondback Explorer",
+    "diamondback": "Diamondback Scout",
+    "type6": "Type-6 Transporter",
+    "type7": "Type-7 Transporter",
+    "type8": "Type-8 Transporter",
+    "type9": "Type-9 Heavy",
+    "type9_military": "Type-10 Defender",
+    "viper": "Viper Mk III",
+    "viper_mkiv": "Viper Mk IV",
+    "cobra_mkiii": "Cobra Mk III",
+    "cobra_mkiv": "Cobra Mk IV",
+    "cobramkv": "Cobra Mk V",
+    "vulture": "Vulture",
+    "chieftain": "Alliance Chieftain",
+    "challenger": "Alliance Challenger",
+    "crusader": "Alliance Crusader",
+    "eagle": "Eagle",
+    "imperial_eagle": "Imperial Eagle",
+    "imperial_courier": "Imperial Courier",
+    "empire_trader": "Imperial Clipper",
+    "sidewinder": "Sidewinder",
+    "hauler": "Hauler",
+    "adder": "Adder",
+    "dolphin": "Dolphin",
+    "orca": "Orca",
+    "belugaliner": "Beluga Liner",
+    "federal_dropship": "Federal Dropship",
+    "federal_assault_ship": "Federal Assault Ship",
+    "federal_gunship": "Federal Gunship",
+    "keelback": "Keelback",
+    "explorer": "Explorer",
+    "explorer_nx": "Caspian Explorer"
+  },
+  "commandes_modes": {
+    "commandes_sortie": [
+      "stop", "annuler", "quitter", "terminer", "termine", "terminé", "terminée",
+      "fin", "fin dictee", "fin dictée", "fin epellation", "fin épellation",
+      "arret dictee", "arrêt dictée", "arret epellation", "arrêt épellation",
+      "arret du mode dictee", "arrêt du mode dictée", "fin du mode dictee", "fin du mode dictée",
+      "arret mode dictee", "arrêt mode dictée", "fin mode dictee", "fin mode dictée",
+      "arret de la dictee", "arrêt de la dictée", "fin de la dictee", "fin de la dictée",
+      "arret du mode epellation", "arrêt du mode épellation", "fin du mode epellation", "fin du mode épellation",
+      "arret mode epellation", "arrêt mode épellation", "fin mode epellation", "fin mode épellation",
+      "arret du mode lettre a lettre", "arrêt du mode lettre à lettre", "fin du mode lettre a lettre", "fin du mode lettre à lettre",
+      "quitter la dictee", "quitter la dictée", "quitter le mode dictee", "quitter le mode dictée",
+      "quitter l epellation", "quitter l'épellation", "quitter le mode epellation", "quitter le mode épellation",
+      "fermer", "reprise des commandes", "sortie"
+    ],
+    "activation_dictee": [
+      "mode dictee", "mode dictée", "passer en mode dictee", "passer en mode dictée",
+      "active la dictee", "active la dictée", "activer mode dictee", "activer mode dictée",
+      "lance la dictee", "lance la dictée"
+    ],
+    "validation_dictee": [
+      "envoi", "envoyer", "envoie", "envoi et fin", "envoyer le message", "envoi du message",
+      "poster le message", "valider le message", "expédier", "expedier", "valider", "valide", "poster"
+    ],
+    "correction_dictee": [
+      "corriger", "corrige", "corrigé", "annuler dernier bloc", "annule dernier mot", "annuler le dernier mot"
+    ],
+    "effacer_dictee": [
+      "effacer", "efface", "effacé", "tout effacer", "effacer tout"
+    ],
+    "paragraphe_dictee": [
+      "paragraphe suivant", "paragraph suivant", "nouveau paragraphe", "a la ligne", "à la ligne", "nouvelle ligne", "ligne suivante"
+    ],
+    "activation_epellation": [
+      "mode epellation", "mode épellation", "mode lettre a lettre", "mode lettre à lettre",
+      "passer en mode epellation", "passer en mode épellation", "active l epellation", "active l'épellation"
+    ],
+    "validation_epellation": [
+      "envoi", "envoyer", "envoie", "valider", "valide"
+    ],
+    "correction_epellation": [
+      "corriger", "corrige", "corrigé", "retour", "effacer lettre", "effacer caractere", "effacer caractère"
+    ],
+    "effacer_epellation": [
+      "effacer", "efface", "effacé", "tout effacer", "effacer tout"
+    ],
+    "alphabet_phonetique": {
+      "antoine": "A", "anatole": "A", "alpha": "A", "alfa": "A",
+      "bernard": "B", "berthe": "B", "bravo": "B", "bé": "B", "be": "B", "bo": "B",
+      "charles": "C", "celestine": "C", "célestine": "C", "charlie": "C", "cé": "C", "ce": "C",
+      "denis": "D", "desire": "D", "désiré": "D", "delta": "D", "dé": "D", "de": "D",
+      "emile": "E", "émile": "E", "eugene": "E", "eugène": "E", "echo": "E", "écho": "E",
+      "francois": "F", "françois": "F", "fernand": "F", "foxtrot": "F", "effe": "F",
+      "gaston": "G", "georges": "G", "golf": "G", "gé": "G", "ge": "G",
+      "henri": "H", "henry": "H", "hotel": "H", "hôtel": "H", "hache": "H",
+      "irma": "I", "isidore": "I", "india": "I",
+      "jules": "J", "joseph": "J", "juliett": "J", "juliet": "J", "juliette": "J", "ji": "J",
+      "kleber": "K", "kléber": "K", "kilo": "K", "ka": "K",
+      "louis": "L", "lucien": "L", "lima": "L", "elle": "L",
+      "marcel": "M", "maurice": "M", "mike": "M", "emme": "M",
+      "nicolas": "N", "noemie": "N", "noémie": "N", "november": "N", "enne": "N",
+      "olivier": "O", "octave": "O", "odile": "O",
+      "paul": "P", "pierre": "P", "papa": "P", "pé": "P", "pe": "P",
+      "quentin": "Q", "quebec": "Q", "québec": "Q",
+      "rene": "R", "rené": "R", "robert": "R", "romeo": "R", "roméo": "R", "erre": "R", "ér": "R",
+      "suzanne": "S", "simon": "S", "sierra": "S", "esse": "S",
+      "therese": "T", "thérèse": "T", "thomas": "T", "tango": "T", "té": "T", "te": "T",
+      "ursule": "U", "urbain": "U", "uniform": "U",
+      "victor": "V", "vincent": "V", "vé": "V", "ve": "V",
+      "william": "W", "whiskey": "W", "whisky": "W", "double vé": "W",
+      "xavier": "X", "x-ray": "X", "xray": "X", "ixe": "X",
+      "yvonne": "Y", "yves": "Y", "yankee": "Y", "i grec": "Y", "igrec": "Y",
+      "zoe": "Z", "zoé": "Z", "zulu": "Z", "zoulou": "Z", "zède": "Z", "zede": "Z",
+      "zero": "0", "zéro": "0", "un": "1", "une": "1", "deux": "2", "trois": "3",
+      "quatre": "4", "cinq": "5", "six": "6", "sept": "7", "huit": "8", "neuf": "9",
+      "dix": "10",
+      "espace": " ", "tiret": "-", "tirer": "-", "tirez": "-", "trait_union": "-", "trait-d-union": "-", "moins": "-",
+      "point": ".", "mot_point": ".", "virgule": ",",
+      "diese": "#", "dièse": "#", "underscore": "_", "tiret_bas": "_", "souligne": "_", "souligné": "_", "slash": "/"
+    }
+  }
+}

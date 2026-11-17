@@ -1,0 +1,32 @@
+# ==============================================================================
+# SECRETS ET CLÉS D'API (NE JAMAIS COMMITER)
+# ==============================================================================
+secrets.json
+
+# ==============================================================================
+# DONNÉES LOCALES ET CACHES DE SESSION DU COMMANDANT
+# ==============================================================================
+data/journal_de_bord.txt
+data/flotte_cmdr.json
+data/flotte_cmdr_json_old.txt
+data/commandes_vaisseau - SAVE.txt
+VoiceAttack.dat
+
+# ==============================================================================
+# SAUVEGARDES LOCALES ET FICHIERS TEMPORAIRES
+# ==============================================================================
+IA_Elite_monolith_backup.py
+*.bak
+*.backup
+*.tmp
+
+# ==============================================================================
+# PYTHON CACHE & ENV
+# ==============================================================================
+__pycache__/
+modules/__pycache__/
+*.py[cod]
+*$py.class
+.venv/
+venv/
+env/

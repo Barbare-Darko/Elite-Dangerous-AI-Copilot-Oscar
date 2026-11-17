@@ -1,114 +1,182 @@
-================================================================================
-VERSION FRANÇAISE (FR) — PRÉSENTATION POUR LA PAGE D'ACCUEIL GITHUB (README.md)
-================================================================================
+# 🚀 OSCAR — Copilote Vocal IA pour Elite Dangerous (Odyssey & Horizons)
 
-# OSCAR — Copilote IA Vocal & Télémétrique pour Elite Dangerous
+[![Python 3.10+](https://img.shields.io/badge/python-3.10+-blue.svg)](https://www.python.org/downloads/)
+[![VoiceAttack](https://img.shields.io/badge/VoiceAttack-Compatible-purple.svg)](https://voiceattack.com/)
+[![Whisper GPU](https://img.shields.io/badge/STT-Faster--Whisper%20CUDA-green.svg)](https://github.com/SYSTRAN/faster-whisper)
+[![OpenAI](https://img.shields.io/badge/Brain-GPT--4o--mini-orange.svg)](https://openai.com/)
+[![TTS](https://img.shields.io/badge/TTS-Edge--TTS%20Neural-teal.svg)](https://github.com/rany2/edge-tts)
 
-**Oscar** est un assistant vocal intelligent, sarcastique et proactif conçu pour **Elite Dangerous**. Co-développé en collaboration avec **Gemini (Google)**, ce projet repose sur une architecture hybride combinant la puissance du calcul GPU local (pour la reconnaissance vocale instantanée), les journaux de télémétrie en direct du jeu, les bases de données galactiques communautaires et l'intelligence artificielle générative.
-
-Contrairement aux packs vocaux classiques limités à des phrases préenregistrées, Oscar comprend le langage naturel, analyse l'état réel de votre vaisseau en temps réel et pilote vos commandes via VoiceAttack.
-
----
-
-## Composants nécessaires & Budget estimé
-
-| Composant | Rôle dans l'architecture | Coût estimé | Où l'obtenir |
-| :--- | :--- | :--- | :--- |
-| **Elite Dangerous** (Odyssey / Horizons) | Jeu de base et source des fichiers journaux (`Journal.*.log`, `Status.json`, `Cargo.json`, `ModulesInfo.json`) | ~6 € à 25 € (selon promotions) | Steam / Epic Games / Frontier Store |
-| **VoiceAttack** | Interface d'écoute, activation par mot-clé ou Push-to-Talk et exécution des macros clavier/HOTAS | **Payant** (~10 € à 12 € / licence unique à vie) | Site officiel VoiceAttack (`voiceattack.com`) ou Steam |
-| **Clé API OpenAI (`gpt-4o-mini`)** | Cerveau conversationnel, interprétation des intentions et déclenchement des outils (Function Calling) | **Payant à l'usage** (~0,50 $ pour 1 000 requêtes ; 0 jeton consommé en veille) | Plateforme développeur OpenAI (`platform.openai.com`) |
-| **Python 3.10+** | Environnement d'exécution du script principal | **100 % Gratuit** | Site officiel Python (`python.org`) ou Microsoft Store |
-| **Faster-Whisper (CUDA / GPU)** | Transcription vocale ultra-rapide et précise en local sur carte graphique NVIDIA | **100 % Gratuit** (Open Source) | Bibliothèque Python (`pip install faster-whisper`) |
-| **Edge-TTS (Microsoft Neural)** | Synthèse vocale neurale haute qualité (voix française *Henri* ou *Vivienne* / *Denise*) | **100 % Gratuit** | Bibliothèque Python (`pip install edge-tts`) |
-| **APIs EDSM & Spansh** | Données galactiques (distances 3D, systèmes voisins, stations, prix de marché et disponibilité des modules) | **100 % Gratuit** (sans clé API) | Bases communautaires `edsm.net` et `spansh.co.uk` |
+**Oscar** est un copilote vocal intelligent, autonome et sarcastique conçu pour les commandants d'**Elite Dangerous**. Doté d'une mémoire persistance et d'une connexion directe à la télémétrie locale du jeu ainsi qu'aux bases de données galactiques (Spansh & EDSM), Oscar vous assiste en temps réel au combat, en exploration et en commerce, tout en taquinant volontiers vos talents de pilotage.
 
 ---
 
-## Fonctionnalités principales
-
-### 1. Double mode d'activation & Voix Neurale Expressive
-* **Activation flexible** : Parlez à Oscar soit par **mot-clé vocal** (ex. *« Oscar... »* via la reconnaissance Windows/VoiceAttack), soit par bouton **Push-to-Talk** dédié sur votre HOTAS, joystick ou clavier (`Ctrl+Shift+Alt+F9`).
-* **Compréhension en langage naturel** : Grâce au modèle Whisper exécuté sur GPU, Oscar comprend vos demandes même dans le feu de l'action et corrige automatiquement les approximations phonétiques.
-* **Voix neurale naturelle** : Utilise les voix neurales de Microsoft Edge-TTS (voix masculine posée *Henri* ou voix féminine *Vivienne*/*Denise*) avec nettoyage automatique des symboles et intonation naturelle.
-
-### 2. Contrôle complet du vaisseau, du VRS et à pied (125+ commandes)
-* Pilote toutes vos actions en jeu via VoiceAttack : train d'atterrissage, points d'emport, écope à cargaison, phares, vision nocturne, mode combat/analyse, gestion des pips, super-navigation, saut hyperespace, cartes système/galactique, lancement de drones, dissipateurs thermiques, paillettes, déploiement du VRS, etc.
-
-### 3. Gestion de carrière, de flotte et d'équipement
-* **Suivi de carrière en direct** : Crédits disponibles, progression détaillée de vos rangs (Combat, Commerce, Exploration, Exobiologie, Mercenaire, Empire, Fédération) et inventaire complet de vos matériaux d'ingénieurs.
-* **Suivi intégral de la flotte** : Connaît tous vos vaisseaux (actif et stockés en station), leurs noms personnalisés, leur station d'attache exacte, leurs modules équipés, leur portée de saut maximale et leur capacité de soute exacte en tonnes.
-
-### 4. Télémétrie temps réel & Alertes autonomes (0 jeton OpenAI en veille)
-* **Consultation à la demande** : Niveau exact de carburant, place libre restante en soute (`Cargo.json`), état actif/inactif et santé de vos modules (`ModulesInfo.json`), répartition des pips et destination verrouillée.
-* **Surveillance proactive en arrière-plan** : Un thread dédié analyse `Status.json` et le journal actif plusieurs fois par seconde sans consommer de jetons OpenAI. Oscar vous alerte spontanément par la voix en cas de :
-  * Chute ou perte des boucliers.
-  * Alerte thermique précoce et surchauffe critique.
-  * Carburant bas.
-  * Tentative d'interdiction ou attaque ennemie.
-  * Dégâts de coque ou module tombant sous 50 % de santé.
-
-### 5. Navigation galactique, Commerce & Équipement (EDSM & Spansh)
-* **Calcul de distances 3D** : Calcule la distance exacte en années-lumière entre votre position actuelle et n'importe quel système de la galaxie (Sol, Colonia, systèmes colonisés, etc.).
-* **Recherche commerciale et d'équipement intelligente** : Trouve les meilleures stations pour vendre vos minerais au plus cher ou acheter des marchandises et modules (ex. *FSD 5A*, *Fuel Scoop 6A*) en filtrant automatiquement sur la **taille de piste adaptée à votre vaisseau actif** (PAD Large ou Moyen) et votre rayon de recherche (en années-lumière ou en nombre de sauts).
-* **Copie automatique dans le presse-papiers** : Dès qu'une station cible est identifiée, le nom du système stellaire est automatiquement copié dans le presse-papiers Windows (`Ctrl+V` prêt à l'emploi dans la carte galactique).
-
-### 6. Mémoire persistante légère
-* Conserve un résumé condensé de vos préférences de pilote (`journal_de_bord.txt`) et met en cache les configurations de vos vaisseaux (`flotte_cmdr.json`) afin de limiter la consommation de jetons et garantir des réponses instantanées.
-
-
-================================================================================
-ENGLISH VERSION (EN) — GITHUB HOMEPAGE PRESENTATION (README.md)
-================================================================================
-
-# OSCAR — AI Voice & Telemetry Co-Pilot for Elite Dangerous
-
-**Oscar** is a smart, sarcastic, and proactive AI co-pilot built for **Elite Dangerous**. Co-designed in collaboration with **Gemini (Google)**, this project features a hybrid architecture combining local GPU speech recognition, real-time game telemetry logs, community galactic databases, and generative AI.
-
-Unlike traditional voice packs restricted to pre-recorded audio lines, Oscar understands natural language, monitors your ship's live telemetry, and triggers your ship controls through VoiceAttack.
+### 📚 Accès Rapide à la Documentation
+- 🛠️ **[Guide d'Installation Complet (INSTALLATION.md)](INSTALLATION.md)** — Prérequis, installation des dépendances, règle Non-Admin de VoiceAttack, synchronisation `.binds` et dépannage.
+- 📖 **[Guide d'Utilisation Complet (GUIDE_UTILISATEUR.md)](GUIDE_UTILISATEUR.md)** — Flux d'interprétation, activation Mains Libres, modes Dictée & Épellation, catalogue des ordres vocaux et télémétrie.
+- ⚙️ **[Guide de Personnalisation (PERSONNALISATION.md)](PERSONNALISATION.md)** — Modifier le nom du copilote, sa voix, sa personnalité et ajouter de nouvelles commandes VoiceAttack.
 
 ---
 
-## Required Components & Estimated Cost
+## ✨ Points forts & Innovations
 
-| Component | Role in the Architecture | Estimated Cost | Where to Get It |
-| :--- | :--- | :--- | :--- |
-| **Elite Dangerous** (Odyssey / Horizons) | Base game and real-time source for local log files (`Journal.*.log`, `Status.json`, `Cargo.json`, `ModulesInfo.json`) | ~$6 to $25 (depending on sales) | Steam / Epic Games / Frontier Store |
-| **VoiceAttack** | Wake-word / Push-to-Talk listener and keyboard/HOTAS macro execution engine | **Paid** (~$10–$12 / one-time lifetime license) | Official VoiceAttack website (`voiceattack.com`) or Steam |
-| **OpenAI API Key (`gpt-4o-mini`)** | Conversational brain, intent parsing, and tool execution (Function Calling) | **Pay-as-you-go** (~$0.50 per 1,000 requests; 0 tokens used while idle) | OpenAI Developer Platform (`platform.openai.com`) |
-| **Python 3.10+** | Runtime environment for the main assistant script | **100% Free** | Official Python website (`python.org`) or Microsoft Store |
-| **Faster-Whisper (CUDA / GPU)** | Ultra-fast, high-accuracy local speech-to-text running on NVIDIA GPUs | **100% Free** (Open Source) | Python package (`pip install faster-whisper`) |
-| **Edge-TTS (Microsoft Neural)** | High-quality neural text-to-speech synthesis (natural voices like *Henri*, *Vivienne*, or *Denise*) | **100% Free** | Python package (`pip install edge-tts`) |
-| **EDSM & Spansh APIs** | Galactic databases (3D distances, nearby systems, stations, market prices, and outfitting availability) | **100% Free** (no API key required) | Community databases `edsm.net` and `spansh.co.uk` |
+- **🧠 Cerveau Hybride GPT-4o-mini & Function Calling :** Interprétation sémantique naturelle des intentions du pilote et déclenchement automatique d'outils temps réel (télémétrie, calculs de sauts, consultation de la flotte, etc.).
+- **⚡ STT Local Ultra-Rapide (Faster-Whisper sur GPU) :** Reconnaissance vocale exécutée en local sur votre carte graphique NVIDIA via CUDA (modèle `large-v3-turbo`) avec amorçage contextuel anti-hallucinations.
+- **🗣️ Synthèse Vocale Neurale Gratuite (Edge-TTS) :** Voix haute fidélité naturelle Microsoft Henri Neural (`fr-FR-HenriNeural`), sans aucun coût d'API vocale et sans bloquer l'audio du jeu.
+- **🎙️ Modes de Saisie Directe Gratuits (0 jeton consommé) :**
+  - **Mode Dictée :** Dictez vocalement vos messages dans le chat du jeu ou sur Discord, avec ponctuation automatique et injection fluide par presse-papiers.
+  - **Mode Épellation :** Épelez lettre par lettre les systèmes stellaires dans la carte galactique (alphabets OTAN et français acceptés, gestion déterministe des tirets et des codes alphanumériques).
+- **📡 Télémétrie & Alertes Autonomes :** Thread haute fréquence (0.4s) surveillant en continu l'état du vaisseau (`Status.json`, `ModulesInfo.json`, `Cargo.json`, journaux d'événements). Oscar vous avertit de vive voix lors des ruptures de boucliers, surchauffes, interdictions ou pannes de modules critiques.
+- **📊 Recherche Marché & Modules par PAD (Spansh) :** Recherche de stations vendant ou achetant des minerais/marchandises au meilleur prix, ou proposant l'équipement désiré, en vérifiant automatiquement la compatibilité du PAD (Large/Moyen) de votre vaisseau actif et en copiant directement le système cible dans votre presse-papiers.
+- **🔒 Zéro Mode Administrateur & Respect Strict du HOTAS :** Tourne entièrement dans le répertoire utilisateur et intègre l'utilitaire `sync_binds.py` pour configurer les touches du copilote sans jamais modifier ni écraser vos commandes HOTAS/manette originales.
 
 ---
 
-## Key Features
+## 🛠️ Prérequis
 
-### 1. Dual Activation Mode & Expressive Neural Voice
-* **Flexible Activation**: Trigger Oscar either by **vocal wake-word** (e.g., *"Oscar..."* via Windows/VoiceAttack speech recognition) or via a dedicated **Push-to-Talk button** mapped to your HOTAS, joystick, or keyboard (`Ctrl+Shift+Alt+F9`).
-* **Natural Language Understanding**: Powered by GPU-accelerated Whisper, Oscar accurately understands your commands even during intense combat or mining sessions and automatically corrects phonetic transcription quirks.
-* **Neural Text-to-Speech**: Uses Microsoft Edge-TTS neural voices for natural intonation, pacing, and expressive delivery without robotic artifacts.
+1. **Système :** Windows 10 ou Windows 11 (64-bit).
+2. **Python :** Python 3.10 ou supérieur (avec option `Add Python to PATH` cochée lors de l'installation).
+3. **Carte Graphique :** GPU NVIDIA (série GTX 1060 / RTX recommandée avec pilotes à jour et support CUDA).
+4. **VoiceAttack :** Logiciel VoiceAttack installé (version Steam ou Standalone).
+5. **Clé API OpenAI :** Clé d'API valide avec accès au modèle `gpt-4o-mini`.
+6. **Clé API EDSM (Optionnelle) :** Gratuite, disponible sur votre compte [EDSM.net](https://www.edsm.net/).
 
-### 2. Full Ship, SRV & On-Foot Control (125+ Commands)
-* Controls all your in-game bindings through VoiceAttack: landing gear, hardpoints, cargo scoop, ship lights, night vision, combat/analysis modes, power distributor pips, supercruise, hyperspace jumps, system/galaxy maps, limpets, heat sinks, chaff, SRV deployment, and more.
+---
 
-### 3. Career, Fleet & Outfitting Management
-* **Live Career Tracking**: Real-time credit balance, detailed rank progression (Combat, Trade, Exploration, Exobiology, Mercenary, Empire, Federation), and full engineering materials inventory.
-* **Complete Fleet Awareness**: Tracks every ship you own (active and stored), custom ship names, exact home stations, outfitted modules, maximum jump range, and exact cargo capacity in tons.
+## 📦 Installation pas-à-pas
 
-### 4. Real-Time Telemetry & Autonomous Alerts (0 OpenAI Tokens While Idle)
-* **On-Demand Status**: Exact fuel levels, remaining free cargo space (`Cargo.json`), active/inactive module states and module health (`ModulesInfo.json`), pip distribution, and locked destination.
-* **Proactive Background Monitoring**: A dedicated background thread polls `Status.json` and the active journal multiple times per second with zero OpenAI token usage. Oscar automatically warns you by voice when:
-  * Shields go offline.
-  * Early thermal warning or critical overheating occurs.
-  * Fuel reserves drop low.
-  * An interdiction or enemy attack begins.
-  * Hull integrity drops or any module health falls below 50%.
+### 1. Cloner ou télécharger le projet
+Placez l'ensemble des fichiers dans votre dossier utilisateur, par exemple :
+```text
+C:\Users\<VotreNom>\Documents\IA Elite
+```
 
-### 5. Galactic Navigation, Trading & Outfitting (EDSM & Spansh)
-* **3D Distance Calculator**: Computes exact light-year distances between your current location and any star system in the galaxy (Sol, Colonia, newly colonized systems, etc.).
-* **Smart Trade & Outfitting Search**: Finds the best stations to sell mined minerals at top prices or buy commodities and ship modules (e.g., *5A Frame Shift Drive*, *6A Fuel Scoop*), automatically filtering by **landing pad size compatible with your active ship** (Large or Medium pad) and your search radius (in light-years or max jumps).
-* **Automatic Clipboard Copy**: Whenever a target station is found, the destination star system name is automatically copied to your Windows clipboard, ready to paste (`Ctrl+V`) directly into the Galaxy Map.
+### 2. Installer les dépendances Python
+Ouvrez une invite de commandes ou PowerShell dans le dossier du projet et exécutez :
+```cmd
+pip install -r requirements.txt
+```
+*(Si vous n'avez pas de fichier requirements.txt, installez : `pip install faster-whisper sounddevice numpy keyboard openai edge-tts pywin32 requests`)*
 
-### 6. Lightweight Persistent Memory
-* Maintains a condensed summary of your pilot preferences (`journal_de_bord.txt`) and caches your fleet loadouts (`flotte_cmdr.json`) to keep token usage minimal and responses instantaneous.
+### 3. Configurer vos clés secrètes (`secrets.json`)
+Copiez le modèle `secrets.example.json` pour créer votre fichier personnel `secrets.json` :
+```cmd
+copy secrets.example.json secrets.json
+```
+Ouvrez `secrets.json` avec un éditeur de texte et renseignez vos informations :
+```json
+{
+  "openai_api_key": "sk-proj-VOTRE_CLE_API_OPENAI",
+  "edsm_api_key": "VOTRE_CLE_API_EDSM_OPTIONNELLE",
+  "cmdr_name": "VotreNomCommandant",
+  "chemins": {
+    "dossier_journaux_ed": "%USERPROFILE%\\Saved Games\\Frontier Developments\\Elite Dangerous",
+    "chemin_voiceattack": "C:\\Program Files (x86)\\Steam\\steamapps\\common\\VoiceAttack\\VoiceAttack.exe"
+  }
+}
+```
+> 🛡️ **Sécurité :** `secrets.json` est strictement ignoré par `.gitignore` et ne sera jamais publié sur GitHub.
+
+### 4. Importer le profil VoiceAttack
+1. Lancez **VoiceAttack**.
+2. Cliquez sur l'icône de gestion des profils (icône dossier) $\rightarrow$ **Importer un profil**.
+3. Sélectionnez le fichier `data/Profil IA ELite Dangerous-Profile.vap` (ou situé à la racine).
+4. Assurez-vous que le raccourci d'écoute micro (Push-To-Talk) est configuré sur **`Ctrl + Shift + F9`** (sans Alt).
+
+### 5. Synchroniser vos commandes de jeu (`sync_binds.py`)
+Avant de lancer le jeu, exécutez l'utilitaire interactif de synchronisation :
+```cmd
+py sync_binds.py
+```
+- L'utilitaire détecte votre configuration actuelle (ex: `HOTAS TOUS MODES`, `Custom`, etc.).
+- Il crée une **nouvelle copie dédiée** (ex: `Custom_Oscar.4.2.binds`) en injectant les 110 raccourcis nécessaires dans la colonne secondaire (`<Secondary>`), sans écraser aucune de vos touches principales existantes.
+- En jeu, dans `Options -> Commandes`, sélectionnez simplement votre nouveau profil `..._Oscar`.
+
+---
+
+## 🎮 Lancement du Copilote
+
+Oscar fonctionne **exclusivement en mode utilisateur standard** (aucun droit Administrateur n'est requis ni sollicité).
+
+Lancez simplement le fichier de démarrage :
+```cmd
+IA_Elite.bat
+```
+Ou en ligne de commande :
+```cmd
+py IA_Elite.py
+```
+
+Le script démarre automatiquement VoiceAttack, initialise le modèle Faster-Whisper sur votre GPU, analyse vos journaux de vol récents et vous accueille de vive voix dès qu'il est prêt.
+
+### Deux méthodes d'interaction au choix :
+- **Mode Push-To-Talk HOTAS (Contrôle absolu) :**  
+  Maintenez enfoncé votre bouton micro (`Ctrl + Shift + F9`), énoncez votre ordre ou question, puis relâchez.
+- **Mode Mains Libres (100 % vocal via VoiceAttack) :**  
+  Dites simplement **« Oscar »** (le canal s'ouvre avec confirmation vocale) $\rightarrow$ parlez $\rightarrow$ terminez en disant **« Terminé »** (le canal se ferme et déclenche l'analyse).
+
+```text
+       [ Pilote (Voix) ]
+              │  (PTT relâché ou « Terminé »)
+              ▼
+   [ Faster-Whisper CUDA ] ──> [ GPT-4o-mini ]
+                                     │
+                 ┌───────────────────┴───────────────────┐
+                 ▼                                       ▼
+       [ Télémétrie / EDSM / Spansh ]           [ Action de bord VoiceAttack ]
+          (Function Calling Python)                [EXECUTE:Nom_Commande]
+                 │                                       │
+                 ▼                                       ▼
+       [ Réponse Edge-TTS ]                 [ Simulation Touche .binds ]
+```
+
+---
+
+## 📚 Documentation complémentaire
+
+- 🛠️ **[Guide d'Installation Complet (INSTALLATION.md)](INSTALLATION.md) :**
+  - Prérequis système, installation des dépendances, règle Non-Admin VoiceAttack et résolution des problèmes fréquents.
+- 📖 **[Guide d'Utilisation Complet (GUIDE_UTILISATEUR.md)](GUIDE_UTILISATEUR.md) :**
+  - Architecture détaillée, mode Mains Libres, mode d'emploi des modes **Dictée** et **Épellation**, catalogue exhaustif des requêtes et ordres vocaux.
+- ⚙️ **[Guide de Personnalisation (PERSONNALISATION.md)](PERSONNALISATION.md) :**
+  - Comment modifier le nom, la voix, la personnalité d'Oscar, ajouter de nouveaux vaisseaux et créer de nouvelles commandes VoiceAttack.
+
+---
+
+## 📂 Architecture modulaire du projet
+
+```text
+IA Elite/
+├── IA_Elite.py              # Orchestrateur principal léger (~150 lignes, boucle PTT & états)
+├── IA_Elite.bat             # Lanceur Windows utilisateur standard
+├── sync_binds.py            # Utilitaire interactif de synchronisation des touches .binds
+├── config_oscar.json        # Paramètres personnalisables (nom, personnalité, voix, vaisseaux)
+├── secrets.json             # Clés d'API et chemins locaux protégés (ignoré par git)
+├── secrets.example.json     # Modèle vierge de configuration pour GitHub
+├── requirements.txt         # Dépendances Python nécessaires
+├── README.md                # Présentation et guide d'installation général
+├── INSTALLATION.md          # Guide d'installation pas-à-pas et dépannage
+├── GUIDE_UTILISATEUR.md     # Manuel complet des commandes vocales et modes de saisie
+├── PERSONNALISATION.md      # Guide des personnalisations avancées
+├── data/                    # Données persistantes
+│   ├── commandes_vaisseau.txt           # Liste des macros VoiceAttack
+│   ├── journal_de_bord.txt              # Archives et mémoires de session
+│   ├── flotte_cmdr.json                 # Cache local de la flotte et configurations
+│   └── Profil IA ELite Dangerous-Profile.vap  # Profil VoiceAttack
+└── modules/                 # Package Python des moteurs découplés
+    ├── config_loader.py     # Chargement typé des configurations et secrets
+    ├── stt_engine.py        # Reconnaissance vocale Faster-Whisper GPU CUDA
+    ├── tts_engine.py        # Synthèse vocale Edge-TTS et anti-écho
+    ├── input_engine.py      # Simulation clavier DirectX SendInput x64 et presse-papiers
+    ├── telemetry_ed.py      # Analyse journaux ED et thread d'alertes autonomes
+    ├── api_clients.py       # Requêtes EDSM & Spansh (commerce, modules, PAD)
+    ├── oscar_brain.py       # Cerveau OpenAI GPT-4o-mini & Function Calling
+    └── text_modes.py        # Logique des modes Dictée et Épellation déterministes
+```
+
+---
+
+## 📜 Licence & Droits
+
+Projet open-source partagé pour la communauté des pilotes d'Elite Dangerous.
+Elite Dangerous est une marque déposée de Frontier Developments plc.
+VoiceAttack est un logiciel édité par VoiceAttack LLC.
