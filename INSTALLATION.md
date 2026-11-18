@@ -118,6 +118,7 @@ Cette étape est fondamentale pour permettre à Oscar d'exécuter des actions ph
    - Il crée une **nouvelle copie dédiée et sécurisée** (ex: `Custom_Oscar.4.2.binds`).
    - Il injecte les 110 raccourcis clavier requis **uniquement dans la colonne secondaire (`<Secondary>`)**, laissant votre colonne principale (`<Primary>`) 100 % intacte.
    - Il utilise les codes matériels DirectInput reconnus par le moteur du jeu (résolvant tout problème avec les touches AZERTY spéciales).
+   - *(Pour consulter la correspondance exacte de chacune des 110 balises, touches et modes de jeu, reportez-vous au **[Tableau Récapitulatif Complet des Commandes (TABLEAU_COMMANDES.md)](TABLEAU_COMMANDES.md)**).*
 3. **Activation en jeu :**
    - Lancez **Elite Dangerous**.
    - Allez dans **Options $\rightarrow$ Commandes**.
