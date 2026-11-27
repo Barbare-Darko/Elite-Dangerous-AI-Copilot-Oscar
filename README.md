@@ -10,112 +10,122 @@
 [![OpenAI](https://img.shields.io/badge/Brain-GPT--4o--mini-orange.svg)](https://openai.com/)
 [![TTS](https://img.shields.io/badge/TTS-Edge--TTS%20Neural-teal.svg)](https://github.com/rany2/edge-tts)
 
-**Oscar** est un copilote vocal intelligent, autonome et sarcastique conçu pour les commandants d'**Elite Dangerous**. Doté d'une mémoire persistance et d'une connexion directe à la télémétrie locale du jeu ainsi qu'aux bases de données galactiques (Spansh & EDSM), Oscar vous assiste en temps réel au combat, en exploration et en commerce, tout en taquinant volontiers vos talents de pilotage.
+**Oscar** est un copilote vocal intelligent, autonome et sarcastique conçu pour les commandants d'**Elite Dangerous** (*écran plat + Tobii Eye Tracker 5* ou *VR Meta Quest 3*). Connecté en direct à la télémétrie locale du jeu et aux bases galactiques (**Spansh**, **EDSM**, **EDAstro**), il pilote votre vaisseau, votre VRS et votre combinaison à la voix, surveille vos constantes vitales, analyse vos systèmes d'exploration, observe votre écran et vous assiste en temps réel — le tout **sans aucun droit Administrateur** et sans toucher à vos commandes HOTAS.
+
+> 💡 **Budget :** Tous les composants sont **100 % gratuits** (projet open-source, Faster-Whisper GPU, Edge-TTS, HUD, APIs galactiques), à l'exception de **VoiceAttack** (~10–12 € en achat unique) et du crédit prépayé **API OpenAI `gpt-4o-mini`** (~0,05 à 0,15 € par heure de jeu actif).
 
 ---
 
-### 📚 Accès Rapide à la Documentation
-- 🛠️ **[Guide d'Installation Complet (INSTALLATION.md)](INSTALLATION.md)** — Prérequis, installation pas-à-pas des dépendances, règle Non-Admin de VoiceAttack, synchronisation `.binds` et dépannage.
-- 📖 **[Guide d'Utilisation Complet (GUIDE_UTILISATEUR.md)](GUIDE_UTILISATEUR.md)** — Flux d'interprétation, activation Mains Libres, modes Dictée & Épellation, catalogue des ordres vocaux et télémétrie.
-- ⚙️ **[Guide de Personnalisation (PERSONNALISATION.md)](PERSONNALISATION.md)** — Modifier le nom du copilote, sa voix, sa personnalité et ajouter de nouvelles commandes VoiceAttack.
+### 📚 Documentation Complète (Tout-en-un)
+
+Toute la documentation (Présentation, Installation pas-à-pas, Guide d'utilisation avec exemples concrets, Personnalisation et Tableau complet des 110 actions) est regroupée dans **un seul manuel autonome complet** :
+
+- 🇫🇷 **[Documentation Complète en Français (DOCUMENTATION_FR.md)](DOCUMENTATION_FR.md)** — *(version PDF imprimable : **[DOCUMENTATION_FR.pdf](DOCUMENTATION_FR.pdf)**)*
 
 ---
 
-## ✨ Points forts & Innovations
+## ✨ Points forts & Innovations (v17.1)
 
-- **🧠 Cerveau Hybride GPT-4o-mini & Function Calling :** Interprétation sémantique naturelle des intentions du pilote et déclenchement automatique d'outils temps réel (télémétrie, calculs de sauts, consultation de la flotte, etc.).
-- **⚡ STT Local Ultra-Rapide (Faster-Whisper sur GPU) :** Reconnaissance vocale exécutée en local sur votre carte graphique NVIDIA via CUDA (modèle `large-v3-turbo`) avec amorçage contextuel anti-hallucinations.
-- **🗣️ Synthèse Vocale Neurale Gratuite (Edge-TTS) :** Voix haute fidélité naturelle Microsoft Henri Neural (`fr-FR-HenriNeural`), sans aucun coût d'API vocale et sans bloquer l'audio du jeu.
-- **🎙️ Modes de Saisie Directe Gratuits (0 jeton consommé) :**
-  - **Mode Dictée :** Dictez vocalement vos messages dans le chat du jeu ou sur Discord, avec ponctuation automatique et injection fluide par presse-papiers.
-  - **Mode Épellation :** Épelez lettre par lettre les systèmes stellaires dans la carte galactique (alphabets OTAN et français acceptés, gestion déterministe des tirets et des codes alphanumériques).
-- **📡 Télémétrie & Alertes Autonomes :** Thread haute fréquence (0.4s) surveillant en continu l'état du vaisseau (`Status.json`, `ModulesInfo.json`, `Cargo.json`, journaux d'événements). Oscar vous avertit de vive voix lors des ruptures de boucliers, surchauffes, interdictions ou pannes de modules critiques.
-- **📊 Recherche Marché & Modules par PAD (Spansh) :** Recherche de stations vendant ou achetant des minerais/marchandises au meilleur prix, ou proposant l'équipement désiré, en vérifiant automatiquement la compatibilité du PAD (Large/Moyen) de votre vaisseau actif et en copiant directement le système cible dans votre presse-papiers.
-- **🔒 Zéro Mode Administrateur & Respect Strict du HOTAS :** Tourne entièrement dans le répertoire utilisateur et intègre l'utilitaire `sync_binds.py` pour configurer les touches du copilote sans jamais modifier ni écraser vos commandes HOTAS/manette originales.
+- **🧠 Cerveau Naturel GPT-4o-mini & Sécurité Absolue :** Compréhension fluide de vos phrases en langage naturel grâce aux familles de verbes synonymes (y compris conjugués), distinction stricte *Question vs Commande*, déclenchement automatique d'outils temps réel (analyse FSS, portefeuille d'exploration, commerce, flotte, distances) et **verrou de sécurité** bloquant les actions critiques (`Passer Mode Furtif`, `Larguer Cargaison`) sans ordre explicite.
+- **⚡ Reconnaissance Vocale Locale GPU (Faster-Whisper CUDA) :** Exécutée localement sur votre carte NVIDIA (`large-v3-turbo`) avec vocabulaire Elite Dangerous intégré, marge de fin PTT (*Push-To-Talk*) anti-coupure et filtre anti-hallucination (en cas de bruit ambiant, Oscar demande simplement de répéter à 0 jeton).
+- **🗣️ Voix Neurale Gratuite & *Barge-in* Instantané (Edge-TTS) :** Voix naturelle Microsoft Neural (`fr-FR-HenriNeural` ou toute autre voix Edge-TTS) avec **interruption vocale instantanée (< 50 ms)** dès que vous appuyez sur votre bouton PTT (*Push-To-Talk*).
+- **🥾 Mode À Pied (Odyssey) Complet & Sécurisé :** Suivi temps réel de l'équipement tenu en main, séparation stricte **Outils vs Armes** (protection anti-toggle, cycle *Outil suivant* limité aux 3 outils de combinaison), bascule sans superposition des **3 roues radiales** (*Inventaire*, *Émoticônes*, *Insight*), *Cellule d'énergie* adaptative (batterie à pied ↔ bouclier en vaisseau) et **alertes de survie autonomes** (Oxygène ≤ 30 % / ≤ 15 %, Santé ≤ 40 %).
+- **🖥️ HUD Overlay Transparent (Mode *Sans bordure*) :** Fenêtre holographique `tkinter` sans bordure, transparente aux clics et sans vol de focus (`25 car. × 10 lignes`), pilotable à la voix à **0 jeton** (*« Affiche / Enlève le HUD »*), séparation stricte `HUD` (Oscar) vs `ATH` (jeu), voyant micro rouge/vert et positions mémorisées indépendamment par vue (`cockpit`, `carte_systeme`, `carte_galactique`, `a_pied`).
+- **👁️ Vision Hybride (OpenAI / Ollama) & Mode Photo Automatisé :** Dites *« Regarde ! … »* pour faire analyser votre écran (instruments cockpit avec recadrage ultrawide, plantes Odyssey vérifiées contre votre Codex personnel, nébuleuses filtrées par couleur), ou *« Prends une photo »* (0 jeton) pour sauvegarder un PNG natif propre en masquant puis rétablissant automatiquement le HUD Oscar et l'ATH caméra.
+- **🔭 Codex Local, Analyse FSS & Portefeuille Exploration :** Base locale `data/codex_ed.json` (979 nébuleuses/POIs EDAstro+EDSM synchronisés tous les 30 jours, 15 genres exobiologiques, géologie), historique personnel `data/codex_cmdr.json`, analyse FSS triée par pertinence et distance en secondes-lumière (avec fourchettes Vista Genomics réalistes, matériaux rares, anneaux) et calcul en direct du portefeuille d'exploration non vendu à bord (bonus ×5 vérifié planète par planète).
+- **🧭 Navigation Proactive & Rattrapage d'Itinéraire (0 jeton) :** Surveillance temps réel (`0,4 s`) des journaux Elite Dangerous : alertes vocales (boucliers, surchauffe, interdiction, carburant, coque, modules), accueil spontané au retour dans votre système maison, annonces d'arrivée et de Honk sur les nouveaux systèmes, et **rattrapage automatique `NavRoute.json`** via la Carte Galactique quand Odyssey oublie votre route après un débarquement.
+- **🎙️ Modes Texte Gratuits (0 jeton consommé) :**
+  - **Mode Dictée :** Idéal pour envoyer un message dans le chat en jeu ou sur Discord sans lâcher votre HOTAS (en terminant par *« Envoi »*).
+  - **Mode Épellation :** Pour saisir des noms de systèmes complexes dans la Carte Galactique (lettres normales ou alphabet OTAN/français, gestion explicite du tiret `-`).
+- **📊 Commerce, Équipement (Spansh) & Flotte :** Recherche marchande et d'équipement filtrée par taille de PAD avec relance automatique sans limite de distance et copie du système cible dans le presse-papiers ; consultation complète de votre flotte et de ses configurations (`Chantier Naval` + `Loadout`).
+- **🔒 Zéro Droit Administrateur & Respect Strict du HOTAS :** Fonctionne intégralement en mode utilisateur normal ; `sync_binds.py` injecte les touches d'Oscar uniquement dans la colonne **Secondaire (`<Secondary>`)** d'une copie dédiée de votre profil `.binds`.
+
+---
+
+## 🗺️ Prochaines évolutions prévues
+
+Le projet évolue activement par grandes étapes structurées :
+
+- **🚀 v18.0 — Installateur Windows autonome & Paramétreur graphique :** un installateur unique (sans droit Administrateur) et une interface graphique complète pour configurer Oscar en quelques clics, sans jamais avoir à éditer un fichier `.json` à la main.
+- **🔓 v19.0 — Suppression complète de VoiceAttack :** Oscar 100 % autonome (zéro logiciel tiers payant), détection directe de votre bouton PTT HOTAS en Python, lecture automatique de votre fichier `.binds` actif et envoi DirectInput natif.
+- **🇬🇧 v20.0 — Version anglaise intégrale :** internationalisation complète du copilote (voix, reconnaissance vocale, commandes, prompts, interface, installateur et documentation bilingue FR/EN).
+- **🐧 v21.0 — Portage Linux (Steam / Proton) :** rendu possible par la sortie de VoiceAttack en v19, pour permettre aux commandants sous Linux de voler avec Oscar.
+
+> [!IMPORTANT]
+> 🧪 **Appel aux testeurs — Commandants recherchés !**  
+> Nous sommes activement à la recherche de **pilotes volontaires (bêta-testeurs)** pour tester Oscar sur différentes configurations matérielles et logicielles, **en particulier pour les prochaines versions à venir** (installateur v18, mode sans VoiceAttack v19, version anglaise v20 et portage Linux v21).  
+> Si vous souhaitez participer, faire des retours ou signaler un souci, n'hésitez pas à ouvrir une **Issue** sur ce dépôt GitHub !
 
 ---
 
 ## 🛠️ Prérequis
 
-1. **Système :** Windows 10 ou Windows 11 (64-bit).
-2. **Python :** Python 3.10 ou supérieur (avec option `Add Python to PATH` cochée lors de l'installation).
-3. **Carte Graphique :** GPU NVIDIA (série GTX 1060 / RTX avec un minimum de 6 Go de VRAM recommandée avec pilotes à jour et support CUDA).
-4. **VoiceAttack :** Logiciel VoiceAttack v1.16+ installé (version Steam ou Standalone).
-5. **Clé API OpenAI :** Clé d'API valide avec accès au modèle `gpt-4o-mini`.
-6. **Clé API EDSM (Optionnelle) :** Gratuite, disponible sur votre compte [EDSM.net](https://edsm.net).
+1. **Système :** Windows 10 ou Windows 11 (64-bit), en mode utilisateur normal (non-Administrateur).
+2. **Python :** Python **3.10+** (option `Add Python to PATH` cochée) et dépendances via `pip install -r requirements.txt`.
+3. **Carte Graphique :** GPU NVIDIA (GTX 1060 / RTX, 6 Go+ VRAM recommandés avec CUDA pour une transcription < 0,2 s).
+4. **Elite Dangerous :** Mode d'affichage **Sans bordure** (*Borderless*) pour le HUD Overlay et la Vision / Mode Photo.
+5. **VoiceAttack :** v1.16+ (Steam ou Standalone, licence complète recommandée, **mode Non-Administrateur obligatoire**).
+6. **Clé API OpenAI :** Compte prépayé avec accès à `gpt-4o-mini` (cerveau + Vision OpenAI Direct recommandée).
+7. **Optionnels :** Clé API **EDSM** (gratuite) ; **Ollama** uniquement si vous souhaitez tester la Vision 100 % locale *(performances visuelles nettement inférieures à OpenAI)*.
 
 ---
 
-## 📦 Étapes d'installation
+## 📦 Installation en bref
 
-Le **[Guide d'Installation Complet (INSTALLATION.md)](INSTALLATION.md)** vous donne la procédure détaillée pas-à-pas pour chaque composant. Les grandes étapes à prévoir sont les suivantes :
+Retrouvez la procédure complète pas-à-pas et le dépannage dans **[DOCUMENTATION_FR.md (Chapitre 1)](DOCUMENTATION_FR.md#chapitre-1--installation--mise-en-service)** :
 
-1. **Cloner ou télécharger le projet** et le placer dans un dossier utilisateur standard (exemple : `C:\Users\<VotreNom>\Documents\IA Elite`).
-2. **Télécharger et installer VoiceAttack v1.16+** (version complète) si vous ne l'avez pas déjà, en veillant à le laisser en mode utilisateur normal (non-Administrateur).
-3. **Installer Python (3.10+) et ses dépendances**.
-4. **Installer Whisper GPU** (`faster-whisper` ainsi que les bibliothèques NVIDIA CUDA/cuDNN).
-5. **Installer Edge-TTS** (`edge-tts`) pour la synthèse vocale neurale gratuite.
-6. **Créer des comptes OpenAI et EDSM** pour obtenir les clés API correspondantes (si vous ne les avez pas déjà).
-7. **Configurer un fichier `secrets.json`** (modèle `secrets.example.json` fourni) avec vos clés API et les chemins vers vos journaux de vol et `VoiceAttack.exe`.
-8. **Importer le profil fourni (`/data/Barbare Darko-Profile.vap`)** dans VoiceAttack.
-9. **Synchroniser automatiquement les 121 commandes VoiceAttack** avec votre fichier `.binds` actif dans Elite Dangerous grâce au petit utilitaire `sync_binds.py` fourni (sans toucher à vos touches principales).
-10. **Mettre à jour les commandes `Oscar`, `Terminé`, `COM_IA_ON` et `COM_IA_OFF`** dans VoiceAttack pour correspondre à votre bouton Push-To-Talk et au nom de l'IA choisi.
-11. **Lancer `IA_Elite.bat`** pour démarrer le copilote !
+1. **Placez le projet** dans un dossier utilisateur standard (ex. `C:\Users\<VotreNom>\Documents\IA Elite` — jamais dans `Program Files`).
+2. **Installez les dépendances Python :** `pip install -r requirements.txt`.
+3. **Créez `secrets.json`** à partir de `secrets.example.json` avec vos clés API et vos chemins locaux.
+4. **Configurez VoiceAttack** en mode **Non-Administrateur**, importez `data/Barbare Darko-Profile.vap` et liez votre bouton PTT (*Push-To-Talk*) à `COM_IA_ON` / `COM_IA_OFF`.
+5. **Exécutez `py sync_binds.py`** pour créer votre copie sécurisée `..._Oscar.4.2.binds`, puis sélectionnez ce profil dans les **4 onglets de commandes** d'Elite Dangerous (*Général*, *Vaisseau*, *VRS*, *À pied*) et passez l'affichage en **Sans bordure**.
+6. **Lancez `IA_Elite.bat`** !
 
 ---
 
-## 📚 Documentation complémentaire
-
-- 🛠️ **[Guide d'Installation Complet (INSTALLATION.md)](INSTALLATION.md) :**
-  - Installation détaillée de tous les composants, règle Non-Admin VoiceAttack, lancement du copilote et résolution des problèmes fréquents.
-- 📖 **[Guide d'Utilisation Complet (GUIDE_UTILISATEUR.md)](GUIDE_UTILISATEUR.md) :**
-  - Architecture détaillée, mode Mains Libres, mode d'emploi des modes **Dictée** et **Épellation**, catalogue exhaustif des requêtes et ordres vocaux.
-- ⚙️ **[Guide de Personnalisation (PERSONNALISATION.md)](PERSONNALISATION.md) :**
-  - Comment modifier le nom, la voix, la personnalité d'Oscar, ajouter de nouveaux vaisseaux et créer de nouvelles commandes VoiceAttack.
-- 🗺️ **[Tableau des Commandes & Raccourcis (TABLEAU_COMMANDES.md)](TABLEAU_COMMANDES.md) :**
-  - Matrice intégrale de correspondance entre les 121 macros VoiceAttack/IA, les touches émulées, les modes du jeu (Vaisseau, VRS, À pied, Général) et les balises XML dans `.binds`.
-
----
-
-## 📂 Architecture modulaire du projet
+## 📂 Architecture modulaire du projet (v17.1)
 
 ```text
-IA Elite/
-├── IA_Elite.py              # Orchestrateur principal léger (~150 lignes, boucle PTT & états)
+Elite-Dangerous-AI-Copilot-Oscar/
+├── IA_Elite.py              # Orchestrateur principal (boucle PTT, Barge-in, HUD, Vision, sécurité, itinéraire)
 ├── IA_Elite.bat             # Lanceur Windows utilisateur standard
-├── sync_binds.py            # Utilitaire interactif de synchronisation des touches .binds
-├── config_oscar.json        # Paramètres personnalisables (nom, personnalité, voix, vaisseaux)
+├── sync_binds.py            # Utilitaire non destructif de synchronisation des touches .binds
+├── config_oscar.json        # Paramètres personnalisables (identité, voix, HUD, Vision/Photo, navigation, synonymes)
 ├── secrets.json             # Clés d'API et chemins locaux protégés (ignoré par git)
-├── secrets.example.json     # Modèle vierge de configuration pour GitHub
+├── secrets.example.json     # Modèle vierge de configuration
 ├── requirements.txt         # Dépendances Python nécessaires
-├── README.md                # Présentation et aperçu général (FR / EN)
-├── INSTALLATION.md          # Guide d'installation pas-à-pas et dépannage
-├── GUIDE_UTILISATEUR.md     # Manuel complet des commandes vocales et modes de saisie
-├── PERSONNALISATION.md      # Guide des personnalisations avancées
-├── TABLEAU_COMMANDES.md     # Matrice complète des commandes VA / .binds / modes ED
-├── data/                    # Données persistantes et profils de référence
-│   ├── commandes_vaisseau.txt           # Liste des macros VoiceAttack
-│   ├── journal_de_bord.txt              # Archives et mémoires de session
-│   ├── flotte_cmdr.json                 # Cache local de la flotte et configurations
-│   ├── Barbare Darko-Profile.vap        # Profil VoiceAttack complet (121 macros)
+├── README.md                # Présentation générale (FR / EN)
+├── DOCUMENTATION_FR.md      # Manuel complet tout-en-un en français
+├── DOCUMENTATION_FR.pdf     # Version PDF du manuel français
+├── data/                    # Données persistantes, Codex et profils de référence
+│   ├── commandes_vaisseau.txt           # Liste des macros VoiceAttack reconnues
+│   ├── journal_de_bord.txt              # Mémoire conversationnelle condensée
+│   ├── flotte_cmdr.json                 # Cache local de votre flotte et configurations
+│   ├── hud_positions.json               # Positions mémorisées du HUD par vue ED
+│   ├── codex_ed.json                    # Codex local (979 nébuleuses/POIs EDAstro+EDSM, exobio, géologie)
+│   ├── codex_cmdr.json                  # Historique personnel CMDR scanné des journaux
+│   ├── Barbare Darko-Profile.vap        # Profil VoiceAttack complet (121 macros + 4 commandes PTT)
 │   └── HOTAS TOUS MODES.4.2.binds       # Profil de touches de référence multi-contextes
 └── modules/                 # Package Python des moteurs découplés
     ├── config_loader.py     # Chargement typé des configurations et secrets
-    ├── stt_engine.py        # Reconnaissance vocale Faster-Whisper GPU CUDA
-    ├── tts_engine.py        # Synthèse vocale Edge-TTS et anti-écho
+    ├── stt_engine.py        # Reconnaissance vocale Faster-Whisper GPU CUDA + anti-hallucination
+    ├── tts_engine.py        # Synthèse vocale Edge-TTS interruptible (Barge-in < 50 ms)
     ├── input_engine.py      # Simulation clavier DirectX SendInput x64 et presse-papiers
-    ├── telemetry_ed.py      # Analyse journaux ED et thread d'alertes autonomes
-    ├── api_clients.py       # Requêtes EDSM & Spansh (commerce, modules, PAD)
-    ├── oscar_brain.py       # Cerveau OpenAI GPT-4o-mini & Function Calling
-    └── text_modes.py        # Logique des modes Dictée et Épellation déterministes
+    ├── telemetry_ed.py      # Analyse journaux ED, alertes 0,4 s, équipement à pied & navigation proactive
+    ├── api_clients.py       # Requêtes EDSM & Spansh (commerce, modules, PAD, relance auto)
+    ├── oscar_brain.py       # Cerveau OpenAI GPT-4o-mini, synonymes, Vision directe & Function Calling
+    ├── text_modes.py        # Modes Dictée et Épellation déterministes (0 jeton)
+    ├── hud_overlay.py       # HUD Overlay transparent tkinter (sans vol de focus, clics traversants)
+    ├── vision_engine.py     # Vision hybride OpenAI/Ollama, capture DPI-aware & Mode Photo
+    └── codex_ed.py          # Codex local/personnel, analyse FSS & portefeuille exploration
 ```
 
 ---
 
 ## 📜 Licence & Droits
 
-Projet open-source partagé pour la communauté des pilotes d'Elite Dangerous.
-Elite Dangerous est une marque déposée de Frontier Developments plc.
+Projet open-source partagé pour la communauté des pilotes d'Elite Dangerous.  
+Elite Dangerous est une marque déposée de Frontier Developments plc.  
 VoiceAttack est un logiciel édité par VoiceAttack LLC.
 
 ---
@@ -129,111 +139,125 @@ VoiceAttack est un logiciel édité par VoiceAttack LLC.
 [![OpenAI](https://img.shields.io/badge/Brain-GPT--4o--mini-orange.svg)](https://openai.com/)
 [![TTS](https://img.shields.io/badge/TTS-Edge--TTS%20Neural-teal.svg)](https://github.com/rany2/edge-tts)
 
-**Oscar** is an intelligent, autonomous, and sarcastic AI voice copilot built for **Elite Dangerous** commanders. Equipped with persistent flight memory and direct integration with local game telemetry as well as galactic databases (Spansh & EDSM), Oscar assists you in real time across combat, exploration, and trading—while happily teasing your piloting skills.
+**Oscar** is an intelligent, autonomous, and sarcastic AI voice copilot designed for **Elite Dangerous** commanders (*flat screen + Tobii Eye Tracker 5* or *Meta Quest 3 VR*). Connected live to your local game telemetry and community galactic databases (**Spansh**, **EDSM**, **EDAstro**), Oscar pilots your ship, SRV, and Odyssey suit by voice, watches your vitals, analyzes explored systems, inspects your screen, and assists you in real time — **with zero Administrator privileges** and without ever touching your primary HOTAS bindings.
+
+> 💡 **Budget:** Almost every component is **100% free** (open-source project, Faster-Whisper GPU, Edge-TTS, HUD overlay, galactic APIs), except **VoiceAttack** (~$10–12 one-time) and pay-as-you-go **OpenAI `gpt-4o-mini` API credits** (~$0.05–$0.15 per hour of active play).
 
 ---
 
-### 📚 Quick Documentation Access
-- 🛠️ **[Complete Installation Guide (INSTALLATION.md)](INSTALLATION.md)** — Prerequisites, step-by-step dependency setup, VoiceAttack Non-Admin rule, `.binds` synchronization, and troubleshooting.
-- 📖 **[Complete User Guide (GUIDE_UTILISATEUR.md)](GUIDE_UTILISATEUR.md)** — Processing pipeline, Hands-Free activation, Dictation & Spelling modes, voice command catalog, and telemetry.
-- ⚙️ **[Customization Guide (PERSONNALISATION.md)](PERSONNALISATION.md)** — Changing the copilot's name, voice, personality, and adding custom VoiceAttack macros.
+> [!NOTE]
+> 🚧 **English Version Under Development!**  
+> For now, **only the French version of Oscar (voice commands, prompts, and full documentation) is available**. A complete, native **English version (v20.0)** — covering voice commands, neural voice, STT, UI, installer, and full English documentation — is actively planned on the roadmap!  
+> 🔔 **Want to be notified when it lands?** Click **Watch → Custom → Releases** (and **Star** the repo) at the top of this GitHub page to receive an automatic alert on new releases.
+
+### 📚 Complete Documentation (All-in-One)
+
+Everything (Overview, Step-by-Step Installation, User Guide with real voice examples, Customization, and the full 110-Action Command Matrix) is bundled into **one complete standalone manual** *(currently in French)*:
+
+- 🇫🇷 **[Complete Manual — French only for now (`DOCUMENTATION_FR.md`)](DOCUMENTATION_FR.md)** — *(printable PDF: **[DOCUMENTATION_FR.pdf](DOCUMENTATION_FR.pdf)**)*
 
 ---
 
-## ✨ Key Features & Innovations
+## ✨ Key Features & Innovations (v17.1)
 
-- **🧠 Hybrid GPT-4o-mini Brain & Function Calling:** Natural semantic understanding of pilot intent with automatic real-time tool execution (ship telemetry, 3D jump calculations, fleet lookup, etc.).
-- **⚡ Ultra-Fast Local STT (Faster-Whisper on GPU):** Local speech-to-text running directly on your NVIDIA GPU via CUDA (`large-v3-turbo` model) with contextual anti-hallucination prompting.
-- **🗣️ Free Neural Text-to-Speech (Edge-TTS):** High-fidelity neural voice synthesis (`fr-FR-HenriNeural` or any Edge-TTS voice), with zero voice API costs and non-blocking game audio.
-- **🎙️ Free Direct Input Modes (0 OpenAI Tokens Consumed):**
-  - **Dictation Mode:** Dictate messages directly into the in-game chat or Discord with automatic punctuation and smooth clipboard injection.
-  - **Spelling Mode:** Spell complex star system names character by character in the Galaxy Map (supports NATO and French phonetic alphabets, deterministic hyphen handling, and alphanumeric codes).
-- **📡 Real-Time Telemetry & Autonomous Alerts:** High-frequency background thread (0.4s) continuously monitoring ship status (`Status.json`, `ModulesInfo.json`, `Cargo.json`, and Player Journals). Oscar warns you aloud upon shield drops, overheating, interdictions, or critical module malfunctions.
-- **📊 Pad-Aware Commodity & Module Search (Spansh):** Finds stations buying or selling commodities at the best price—or stocking desired modules—while automatically checking landing pad compatibility (Large/Medium) for your current ship and copying the target system straight to your clipboard.
-- **🔒 Zero Administrator Privileges & Strict HOTAS Safety:** Runs entirely inside your user directory and includes `sync_binds.py` to map secondary keyboard bindings without ever modifying or overwriting your primary HOTAS/controller binds.
+- **🧠 Natural GPT-4o-mini Brain & Hard Safety Locks:** Natural command phrasing powered by verb synonym families, strict *Question vs Command* separation, live tool calling (FSS analyzer, exploration wallet, trading, fleet, 3D distances), and **hard safety locks** blocking dangerous commands (`Passer Mode Furtif`, `Larguer Cargaison`) unless explicitly spoken.
+- **⚡ Ultra-Fast Local GPU STT (Faster-Whisper CUDA):** Runs locally on your NVIDIA GPU (`large-v3-turbo`) with Elite Dangerous vocabulary prompting, PTT (*Push-To-Talk*) end-buffer protection, and anti-hallucination filtering (on noisy audio, Oscar simply asks you to repeat at 0 tokens).
+- **🗣️ Free Neural Voice & Instant Barge-In (Edge-TTS):** High-fidelity Microsoft Neural voice (`fr-FR-HenriNeural` or any Edge-TTS voice) with **instant speech interruption (< 50 ms)** whenever you press your PTT (*Push-To-Talk*) button.
+- **🥾 Full & Safe Odyssey On-Foot Mode:** Live active-equipment tracking, strict **Tools vs Weapons** separation (anti-toggle protection, safe *Next Tool* cycle restricted to your 3 suit tools), conflict-free switching across all **3 radial wheels** (*Item*, *Emote*, *Insight*), adaptive *Energy Cell* (Suit Battery on foot ↔ Shield Cell Bank in ship), and **autonomous survival alerts** (Oxygen ≤ 30% / ≤ 15%, Health ≤ 40%).
+- **🖥️ Transparent HUD Overlay (*Borderless* Mode):** Frameless, click-through, non-focus-stealing holographic `tkinter` overlay (`25 chars × 10 lines`), voice-toggled at **0 tokens**, strict separation between Oscar's HUD and the game's Free Camera HUD, red/green mic indicator, and independently saved positions per view (`cockpit`, `carte_systeme`, `carte_galactique`, `a_pied`).
+- **👁️ Hybrid Vision (OpenAI / Ollama) & Automated Photo Mode:** Ask Oscar to look at your screen (cockpit gauges with ultrawide 16:9 crop, Odyssey plants checked against your personal Codex, nebulae filtered by color), or trigger **Photo Mode** (0 tokens) to capture a clean native PNG while automatically hiding and restoring both Oscar's HUD and the game's Free Camera UI.
+- **🔭 Local Codex, FSS Analyzer & Exploration Wallet:** Local `data/codex_ed.json` (979 EDAstro+EDSM nebulae/POIs auto-synced every 30 days, 15 exobiology genera, geology), personal `data/codex_cmdr.json`, FSS profitability analyzer sorted by relevance and light-seconds distance (realistic Vista Genomics ranges, rare raw materials, rings), and live unsold exploration wallet tracking (per-body verified ×5 first-footfall bonus).
+- **🧭 Proactive Navigation & Route Recovery (0 Tokens):** High-frequency (`0.4 s`) journal watcher with autonomous alerts (shields, heat, interdiction, fuel, hull, modules), spontaneous home-system welcome, new-system arrival and Honk briefings, and **automatic `NavRoute.json` recovery** via the Galaxy Map when Odyssey forgets your active route after disembarking.
+- **🎙️ Free Text Input Modes (0 Tokens Consumed):**
+  - **Dictation Mode:** Send messages directly into in-game chat or Discord without letting go of your HOTAS.
+  - **Spelling Mode:** Type complex star system names in the Galaxy Map (plain letters or NATO/French phonetic alphabets, deterministic hyphen handling).
+- **📊 Pad-Aware Trading, Outfitting (Spansh) & Fleet:** Commodity and module lookups honoring your ship's landing pad size, automatic distance-cap fallback, clipboard copy of the target system, and full fleet/loadout tracking (`Shipyard` + `Loadout`).
+- **🔒 Zero Administrator Rights & Strict HOTAS Safety:** Runs completely in standard user mode; `sync_binds.py` only writes Oscar's keys into empty **Secondary (`<Secondary>`)** slots on a dedicated copy of your `.binds` file.
+
+---
+
+## 🗺️ Upcoming Roadmap
+
+The project is actively evolving across major planned milestones:
+
+- **🚀 v18.0 — Standalone Windows Installer & Graphical Configurator:** A single non-Admin Windows installer plus a full GUI settings tool so you can configure Oscar in a few clicks without ever editing `.json` files manually.
+- **🔓 v19.0 — Complete Removal of VoiceAttack:** 100% standalone Oscar (zero paid third-party software), native Python HOTAS Push-To-Talk detection, live reading of your active `.binds` file, and native DirectInput keystrokes.
+- **🇬🇧 v20.0 — Full Native English Version:** End-to-end internationalization (English voice commands, TTS, STT, AI prompts, GUI, installer, and full FR/EN documentation).
+- **🐧 v21.0 — Linux Port (Steam / Proton):** Unlocked by removing VoiceAttack in v19, bringing Oscar to Linux commanders.
+
+> [!IMPORTANT]
+> 🧪 **Call for Beta Testers — Commanders Wanted!**  
+> We are actively looking for **volunteer commanders / beta testers** across different hardware and software setups, **especially for upcoming releases** (v18 installer, v19 standalone mode without VoiceAttack, v20 English version, and v21 Linux port).  
+> Want to help test or share feedback? Feel free to open an **Issue** on this GitHub repository!
 
 ---
 
 ## 🛠️ Prerequisites
 
-1. **Operating System:** Windows 10 or Windows 11 (64-bit).
-2. **Python:** Python 3.10 or higher (make sure `Add Python to PATH` is checked during installation).
-3. **Graphics Card:** NVIDIA GPU (GTX 1060 / RTX series with a minimum of 6 GB VRAM recommended, updated drivers, and CUDA support).
-4. **VoiceAttack:** VoiceAttack v1.16+ installed (Steam or Standalone full version).
-5. **OpenAI API Key:** Valid API key with access to the `gpt-4o-mini` model.
-6. **EDSM API Key (Optional):** Free key available from your [EDSM.net](https://edsm.net) account settings.
+1. **OS:** Windows 10 or Windows 11 (64-bit), running in standard user mode (non-Administrator).
+2. **Python:** Python **3.10+** (`Add Python to PATH` checked) + dependencies via `pip install -r requirements.txt`.
+3. **Graphics Card:** NVIDIA GPU (GTX 1060 / RTX, 6 GB+ VRAM recommended with CUDA for < 0.2 s transcription).
+4. **Elite Dangerous:** **Borderless** display mode for the HUD Overlay and Vision / Photo Mode capture.
+5. **VoiceAttack:** v1.16+ (Steam or Standalone, full version recommended, **Non-Administrator mode mandatory**).
+6. **OpenAI API Key:** Pay-as-you-go account with access to `gpt-4o-mini` (brain + recommended OpenAI Direct Vision).
+7. **Optional:** Free **EDSM** API key; **Ollama** only if you want to experiment with 100% local Vision *(visual accuracy is significantly lower than OpenAI)*.
 
 ---
 
-## 📦 Installation Steps
+## 📦 Quick Installation Overview
 
-The **[Complete Installation Guide (INSTALLATION.md)](INSTALLATION.md)** provides detailed step-by-step instructions for every component. Here is an overview of the main steps:
+See the full step-by-step guide and troubleshooting in **[DOCUMENTATION_FR.md (Chapter 1 — French)](DOCUMENTATION_FR.md#chapitre-1--installation--mise-en-service)**:
 
-1. **Clone or download the project** into a standard user folder (example: `C:\Users\<YourName>\Documents\IA Elite`).
-2. **Download and install VoiceAttack v1.16+** (full version) if not already installed, ensuring it runs in standard user mode (non-Administrator).
-3. **Install Python (3.10+) and its dependencies**.
-4. **Install Whisper GPU** (`faster-whisper` along with the NVIDIA CUDA/cuDNN runtime libraries).
-5. **Install Edge-TTS** (`edge-tts`) for free neural voice synthesis.
-6. **Create OpenAI and EDSM accounts** to obtain your API keys (if you do not already have them).
-7. **Configure a `secrets.json` file** (template `secrets.example.json` provided) with your API keys and local paths to your Elite Dangerous journals and `VoiceAttack.exe`.
-8. **Import the provided profile (`/data/Barbare Darko-Profile.vap`)** into VoiceAttack.
-9. **Automatically synchronize all 121 VoiceAttack commands** with your active Elite Dangerous `.binds` file using the included `sync_binds.py` utility (without touching your primary controls).
-10. **Update the `Oscar`, `Terminé`, `COM_IA_ON`, and `COM_IA_OFF` commands** in VoiceAttack to match your Push-To-Talk button and chosen AI name.
-11. **Launch `IA_Elite.bat`** to start your copilot!
+1. **Place the project** in a standard user folder (e.g. `C:\Users\<YourName>\Documents\IA Elite` — never inside `Program Files`).
+2. **Install Python dependencies:** `pip install -r requirements.txt`.
+3. **Create `secrets.json`** from `secrets.example.json` with your API keys and local paths.
+4. **Configure VoiceAttack** in **Non-Administrator** mode, import `data/Barbare Darko-Profile.vap`, and bind your PTT (*Push-To-Talk*) button to `COM_IA_ON` / `COM_IA_OFF`.
+5. **Run `py sync_binds.py`** to create your safe `..._Oscar.4.2.binds` preset, apply it to **all 4 control tabs** in Elite Dangerous (*General*, *Ship*, *SRV*, *On Foot*), and set Display mode to **Borderless**.
+6. **Launch `IA_Elite.bat`**!
 
 ---
 
-## 📚 Additional Documentation
+## 📂 Modular Project Structure (v17.1)
 
-- 🛠️ **[Complete Installation Guide (INSTALLATION.md)](INSTALLATION.md):**
-  - Detailed setup for all components, VoiceAttack Non-Admin rule, copilot launch, and troubleshooting.
-- 📖 **[Complete User Guide (GUIDE_UTILISATEUR.md)](GUIDE_UTILISATEUR.md):**
-  - Detailed processing architecture, Hands-Free mode, **Dictation** & **Spelling** manuals, and full voice command catalog.
-- ⚙️ **[Customization Guide (PERSONNALISATION.md)](PERSONNALISATION.md):**
-  - How to change Oscar's name, voice, personality, add new ships, and create custom VoiceAttack macros.
-- 🗺️ **[Command & Keybinding Matrix (TABLEAU_COMMANDES.md)](TABLEAU_COMMANDES.md):**
-  - Complete mapping matrix between all 121 VoiceAttack/AI macros, simulated keys, in-game modes (Ship, SRV, On Foot, General), and `.binds` XML tags.
-
----
-
-## 📂 Modular Project Structure
-
-~~~text
-IA Elite/
-├── IA_Elite.py              # Lightweight main orchestrator (~150 lines, PTT & state loop)
+```text
+Elite-Dangerous-AI-Copilot-Oscar/
+├── IA_Elite.py              # Main orchestrator (PTT loop, Barge-in, HUD, Vision, safety, route recovery)
 ├── IA_Elite.bat             # Standard-user Windows launcher
-├── sync_binds.py            # Interactive .binds secondary key synchronization tool
-├── config_oscar.json        # Customizable settings (name, personality, voice, ships)
+├── sync_binds.py            # Non-destructive .binds secondary key synchronization tool
+├── config_oscar.json        # Customizable settings (identity, voice, HUD, Vision/Photo, navigation, synonyms)
 ├── secrets.json             # Protected API keys and local paths (ignored by git)
-├── secrets.example.json     # Blank configuration template for GitHub
+├── secrets.example.json     # Blank configuration template
 ├── requirements.txt         # Required Python dependencies
-├── README.md                # Project overview and installation summary (FR / EN)
-├── INSTALLATION.md          # Step-by-step installation guide and troubleshooting
-├── GUIDE_UTILISATEUR.md     # Full manual of voice commands and text input modes
-├── PERSONNALISATION.md      # Advanced customization guide
-├── TABLEAU_COMMANDES.md     # Complete VA / .binds / ED modes command matrix
-├── data/                    # Persistent data and reference profiles
-│   ├── commandes_vaisseau.txt           # List of VoiceAttack macros
-│   ├── journal_de_bord.txt              # Session archives and flight memories
+├── README.md                # Project overview (FR / EN)
+├── DOCUMENTATION_FR.md      # Complete standalone manual (French)
+├── DOCUMENTATION_FR.pdf     # PDF version of the French manual
+├── data/                    # Persistent data, Codex, and reference profiles
+│   ├── commandes_vaisseau.txt           # List of recognized VoiceAttack macros
+│   ├── journal_de_bord.txt              # Condensed conversational flight memory
 │   ├── flotte_cmdr.json                 # Local fleet and loadout cache
-│   ├── Barbare Darko-Profile.vap        # Complete VoiceAttack profile (121 macros)
+│   ├── hud_positions.json               # Saved HUD coordinates per ED view
+│   ├── codex_ed.json                    # Local Codex (979 EDAstro+EDSM nebulae/POIs, exobio, geology)
+│   ├── codex_cmdr.json                  # Personal CMDR history scanned from journals
+│   ├── Barbare Darko-Profile.vap        # Full VoiceAttack profile (121 macros + 4 PTT commands)
 │   └── HOTAS TOUS MODES.4.2.binds       # Multi-context reference keybindings
 └── modules/                 # Decoupled Python engine package
     ├── config_loader.py     # Typed loader for configuration and secrets
-    ├── stt_engine.py        # Faster-Whisper GPU CUDA speech recognition
-    ├── tts_engine.py        # Edge-TTS neural voice synthesis and anti-echo
+    ├── stt_engine.py        # Faster-Whisper GPU CUDA speech recognition + anti-hallucination
+    ├── tts_engine.py        # Interruptible Edge-TTS neural synthesis (Barge-in < 50 ms)
     ├── input_engine.py      # DirectX x64 SendInput keyboard simulation & clipboard
-    ├── telemetry_ed.py      # Elite Dangerous log parser and autonomous alert thread
-    ├── api_clients.py       # EDSM & Spansh queries (trading, modules, landing pads)
-    ├── oscar_brain.py       # OpenAI GPT-4o-mini brain & Function Calling
-    └── text_modes.py        # Deterministic Dictation and Spelling mode logic
-~~~
+    ├── telemetry_ed.py      # ED log parser, 0.4s alerts, on-foot equipment & proactive navigation
+    ├── api_clients.py       # EDSM & Spansh queries (trading, modules, pads, auto-retry)
+    ├── oscar_brain.py       # OpenAI GPT-4o-mini brain, synonyms, direct Vision & Function Calling
+    ├── text_modes.py        # Deterministic Dictation and Spelling modes (0 tokens)
+    ├── hud_overlay.py       # Transparent tkinter HUD overlay (non-focus, click-through)
+    ├── vision_engine.py     # Hybrid OpenAI/Ollama vision, DPI-aware capture & Photo Mode
+    └── codex_ed.py          # Local/personal Codex, FSS analyzer & exploration wallet
+```
 
 ---
 
 ## 📜 License & Trademarks
 
-Open-source project shared for the Elite Dangerous commander community.
-Elite Dangerous is a registered trademark of Frontier Developments plc.
+Open-source project shared for the Elite Dangerous commander community.  
+Elite Dangerous is a registered trademark of Frontier Developments plc.  
 VoiceAttack is a software product by VoiceAttack LLC.
-

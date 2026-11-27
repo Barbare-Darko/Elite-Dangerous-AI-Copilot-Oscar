@@ -10,7 +10,7 @@ from modules.config_loader import (
     HEADERS_HTTP
 )
 from modules.input_engine import copier_presse_papiers
-from modules.telemetry_ed import analyser_journaux_locaux, normaliser_texte
+from modules.telemetry_ed import analyser_journaux_locaux, charger_cache_flotte, normaliser_texte
 
 VAISSEAUX_GRAND_PAD = {
     "caspian explorer", "explorer_nx", "anaconda", "type-7 transporter", "type7",
@@ -21,7 +21,7 @@ VAISSEAUX_GRAND_PAD = {
 
 TRADUCTIONS_MARCHANDISES = {
     "or": "Gold", "argent": "Silver", "platine": "Platinum", "palladium": "Palladium",
-    "iridium": "Iridium", "indium": "Indium", "osmium": "Osmium", "painite": "Painite",
+    "iridium": "Iridium", "myridium": "Iridium", "indium": "Indium", "osmium": "Osmium", "painite": "Painite",
     "tritium": "Tritium", "monazite": "Monazite", "musgravite": "Musgravite",
     "alexandrite": "Alexandrite", "benitoite": "Benitoite", "serendibite": "Serendibite",
     "grandidierite": "Grandidierite", "rhodplumsite": "Rhodplumsite",
@@ -95,6 +95,94 @@ def interroger_edsm_stations(systeme_nom: str):
         return {"erreur": f"Erreur EDSM stations : {str(e)}"}
 
 
+def interroger_edsm_resume_systeme(systeme_nom: str) -> dict:
+    """Interroge rapidement EDSM pour savoir si un système est déjà exploré, habité et riche."""
+    resultat = {
+        "joignable": False,
+        "connu_edsm": False,
+        "population": 0,
+        "nb_stations": 0,
+        "nb_porte_vaisseaux": 0,
+        "nb_corps_edsm": 0,
+        "planetes_interessantes": [],
+        "anneaux_metalliques": 0
+    }
+    if not systeme_nom:
+        return resultat
+
+    try:
+        r_sys = requests.get(
+            "https://www.edsm.net/api-v1/system",
+            params={"systemName": systeme_nom, "showInformation": 1},
+            headers=HEADERS_HTTP,
+            timeout=4
+        )
+        resultat["joignable"] = True
+        data_sys = r_sys.json()
+        if not isinstance(data_sys, dict) or not data_sys.get("name"):
+            # Système inconnu d'EDSM -> potentiellement vierge / 1ère découverte !
+            return resultat
+
+        resultat["connu_edsm"] = True
+        info = data_sys.get("information") or {}
+        if isinstance(info, dict):
+            resultat["population"] = int(info.get("population", 0) or 0)
+
+        # 1. Stations fixes vs Porte-vaisseaux (Fleet Carriers)
+        try:
+            r_st = requests.get(
+                "https://www.edsm.net/api-system-v1/stations",
+                params={"systemName": systeme_nom},
+                headers=HEADERS_HTTP,
+                timeout=4
+            )
+            data_st = r_st.json()
+            if isinstance(data_st, dict):
+                for st in data_st.get("stations", []):
+                    stype = str(st.get("type") or "").lower()
+                    if "fleet carrier" in stype or "drake-class" in stype:
+                        resultat["nb_porte_vaisseaux"] += 1
+                    else:
+                        resultat["nb_stations"] += 1
+        except Exception:
+            pass
+
+        # 2. Corps célestes remarquables déjà archivés sur EDSM
+        try:
+            r_b = requests.get(
+                "https://www.edsm.net/api-system-v1/bodies",
+                params={"systemName": systeme_nom},
+                headers=HEADERS_HTTP,
+                timeout=4
+            )
+            data_b = r_b.json()
+            if isinstance(data_b, dict):
+                bodies = data_b.get("bodies", [])
+                resultat["nb_corps_edsm"] = len(bodies)
+                remarquables = []
+                for b in bodies:
+                    sub = str(b.get("subType") or "").lower()
+                    terra = str(b.get("terraformingState") or "").lower() == "candidate for terraforming"
+                    if "earth-like" in sub:
+                        remarquables.append("Planète tellurique")
+                    elif "water world" in sub:
+                        remarquables.append("Monde aquatique terraformable" if terra else "Monde aquatique")
+                    elif "ammonia" in sub:
+                        remarquables.append("Monde d'ammoniac")
+                    elif terra:
+                        remarquables.append("Planète terraformable")
+                    for ring in b.get("rings", []) or []:
+                        if "metallic" in str(ring.get("type") or "").lower():
+                            resultat["anneaux_metalliques"] += 1
+                resultat["planetes_interessantes"] = remarquables
+        except Exception:
+            pass
+    except Exception:
+        pass
+
+    return resultat
+
+
 def calculer_distance_systemes(systeme_depart: str, systeme_arrivee: str) -> dict:
     """Calcule la distance 3D euclidienne en AL entre deux systèmes via leurs coordonnées EDSM."""
     url = "https://www.edsm.net/api-v1/system"
@@ -107,10 +195,39 @@ def calculer_distance_systemes(systeme_depart: str, systeme_arrivee: str) -> dic
             return {"erreur": f"Coordonnées introuvables sur EDSM pour le système {systeme_arrivee}."}
         c1, c2 = r1["coords"], r2["coords"]
         dist = math.sqrt((c2["x"] - c1["x"])**2 + (c2["y"] - c1["y"])**2 + (c2["z"] - c1["z"])**2)
+
+        # Estimation du nombre de sauts selon la portée du vaisseau actif
+        portee_saut = 0.0
+        try:
+            etat = analyser_journaux_locaux(nb_journaux=1)
+            v_actif = etat.get("vaisseau_actif", {})
+            portee_saut = float(v_actif.get("portee_saut_max") or 0.0)
+            if portee_saut <= 0:
+                cache = charger_cache_flotte()
+                nom_v = normaliser_texte(v_actif.get("nom", ""))
+                mod_v = normaliser_texte(v_actif.get("modele", ""))
+                for cfg in cache.get("configurations", {}).values():
+                    if nom_v and normaliser_texte(cfg.get("nom", "")) == nom_v:
+                        portee_saut = float(cfg.get("portee_saut_max") or 0.0)
+                        break
+                if portee_saut <= 0 and mod_v:
+                    for cfg in cache.get("configurations", {}).values():
+                        if normaliser_texte(cfg.get("modele", "")) == mod_v:
+                            portee_saut = float(cfg.get("portee_saut_max") or 0.0)
+                            break
+        except Exception:
+            portee_saut = 0.0
+
+        if portee_saut <= 0:
+            portee_saut = 30.0
+        sauts_estimes = 0 if dist <= 0 else max(1, math.ceil(dist / portee_saut))
+
         return {
             "depart": systeme_depart,
             "arrivee": systeme_arrivee,
-            "distance_annees_lumiere": round(dist, 2)
+            "distance_annees_lumiere": round(dist, 2),
+            "sauts_estimes": sauts_estimes,
+            "portee_saut_vaisseau": round(portee_saut, 2)
         }
     except Exception as e:
         return {"erreur": f"Erreur calcul distance EDSM : {str(e)}"}
@@ -222,9 +339,33 @@ def rechercher_marche_ou_equipement(objet: str, mode="vendre", critere_tri="prix
         r = requests.post(url, json=payload, headers=HEADERS_HTTP, timeout=10)
         data = r.json()
         resultats = [st for st in data.get("results", []) if "Carrier" not in st.get("type", "")]
+
+        hors_rayon_initial = False
         if not resultats:
+            # Relance automatique sans limite de distance pour trouver la station compatible la plus proche
+            filtres_elargis = {k: v for k, v in filtres.items() if k != "distance"}
+            payload_elargi = {
+                "filters": filtres_elargis,
+                "sort": [{"distance": {"direction": "asc"}}],
+                "size": 15,
+                "page": 0,
+                "reference_system": systeme_actuel
+            }
+            r2 = requests.post(url, json=payload_elargi, headers=HEADERS_HTTP, timeout=12)
+            data2 = r2.json()
+            resultats = [st for st in data2.get("results", []) if "Carrier" not in st.get("type", "")]
+            if resultats:
+                hors_rayon_initial = True
+
+        if not resultats:
+            pad_txt = "Large" if besoin_grand_pad else "Moyen/Large"
             return {
-                "info": f"Aucune station compatible (PAD {'Large' if besoin_grand_pad else 'Moyen/Large'}) trouvée en mode '{mode}' pour '{nom_en}' dans un rayon de {rayon_al} années-lumière autour de {systeme_actuel}."
+                "info": f"Aucune station compatible (PAD {pad_txt}) trouvée en mode '{mode}' pour '{nom_en}' autour de {systeme_actuel} (même sans limite de distance).",
+                "recherche": nom_en,
+                "mode": mode,
+                "rayon_recherche_al": rayon_al,
+                "systeme_reference": systeme_actuel,
+                "pad_requis": pad_txt
             }
 
         stations_formatees = []
@@ -255,7 +396,7 @@ def rechercher_marche_ou_equipement(objet: str, mode="vendre", critere_tri="prix
         meilleur_systeme = stations_formatees[0]["systeme"]
         copier_presse_papiers(meilleur_systeme)
 
-        return {
+        reponse = {
             "recherche": nom_en,
             "mode": mode,
             "rayon_recherche_al": rayon_al,
@@ -263,5 +404,13 @@ def rechercher_marche_ou_equipement(objet: str, mode="vendre", critere_tri="prix
             "systeme_copie_presse_papiers": meilleur_systeme,
             "meilleures_stations": stations_formatees
         }
+        if hors_rayon_initial:
+            reponse["hors_rayon_initial"] = True
+            reponse["rayon_initial_al"] = rayon_al
+            reponse["note_vocale"] = (
+                f"Aucune station trouvée dans le rayon initial de {rayon_al} années-lumière. "
+                f"La station compatible la plus proche est à {stations_formatees[0]['distance_annees_lumiere']} années-lumière."
+            )
+        return reponse
     except Exception as e:
         return {"erreur": f"Erreur lors de la recherche Spansh : {str(e)}"}

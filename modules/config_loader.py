@@ -19,6 +19,9 @@ FICHIER_SECRETS = BASE_DIR / "secrets.json"
 FICHIER_MEMOIRE = DOSSIER_DATA / "journal_de_bord.txt"
 FICHIER_FLOTTE = DOSSIER_DATA / "flotte_cmdr.json"
 FICHIER_COMMANDES = DOSSIER_DATA / "commandes_vaisseau.txt"
+FICHIER_POSITIONS_HUD = DOSSIER_DATA / "hud_positions.json"
+FICHIER_CODEX_ED = DOSSIER_DATA / "codex_ed.json"
+FICHIER_CODEX_CMDR = DOSSIER_DATA / "codex_cmdr.json"
 
 # Valeurs par défaut de secours
 _CONFIG_DEFAUT = {
@@ -37,7 +40,116 @@ _CONFIG_DEFAUT = {
         "delai_clipboard_injection": 0.04
     },
     "noms_vaisseaux": {},
-    "commandes_modes": {}
+    "commandes_modes": {},
+    "hud": {
+        "actif_au_demarrage": False,
+        "couleur_fond": "#120904",
+        "opacite": 0.72,
+        "bordure": False,
+        "couleur_bordure": "#FF7100",
+        "epaisseur_bordure": 1,
+        "police": "Consolas",
+        "taille_police": 12,
+        "couleur_texte": "#FF7100",
+        "nb_caracteres_ligne": 25,
+        "nb_lignes_max": 10,
+        "inclinaison_cockpit": False,
+        "angle_cockpit_degres": 3.5,
+        "perspective_cockpit": 0.07,
+        "positions_par_vue": {
+            "cockpit": [80, 120],
+            "carte_systeme": [80, 120],
+            "carte_galactique": [80, 120],
+            "a_pied": [80, 120]
+        },
+        "commandes_afficher": [
+            "affiche ton hud", "afficher ton hud", "affiche le hud",
+            "ouvre ton hud", "montre ton hud", "active ton hud"
+        ],
+        "commandes_masquer": [
+            "efface ton hud", "effacer ton hud", "supprime ton hud",
+            "supprimer ton hud", "enleve ton hud", "enlève ton hud",
+            "enlever ton hud", "masque ton hud", "cache ton hud",
+            "retire ton hud", "ferme ton hud"
+        ]
+    },
+    "vision": {
+        "actif": False,
+        "photo_active": True,
+        "moteur": "ollama",
+        "modele_openai": "gpt-4o-mini",
+        "detail_openai": "high",
+        "ollama_url": "http://127.0.0.1:11434",
+        "modele": "qwen2.5vl:7b",
+        "keep_alive": 0,
+        "num_ctx": 6144,
+        "timeout_secondes": 60,
+        "largeur_max_analyse": 1600,
+        "qualite_jpeg_analyse": 85,
+        "zoom_ath_ultrawide": True,
+        "codex_maj_auto_jours": 30,
+        "dossier_photos": r"%USERPROFILE%\Pictures\Frontier Developments\Elite Dangerous",
+        "prefixe_nom_photo": "Oscar",
+        "verifier_ath_photo": True,
+        "commande_va_masquer_ath": "Désactiver ATH",
+        "delai_apres_masquage_ath": 3.5,
+        "reactiver_ath_apres_photo": True,
+        "delai_masquage_hud_oscar": 0.15,
+        "phrase_attente_analyse": "Je regarde.",
+        "prefixes_analyse": [
+            "regarde", "regardes", "regardez",
+            "analyse mon ecran", "analyse l ecran"
+        ],
+        "commandes_photo": [
+            "prendre une photo", "prends une photo", "prend une photo", "prenez une photo",
+            "faire une photo", "fais une photo", "fait une photo",
+            "prendre photo", "prends photo", "photo", "une photo",
+            "prendre un screenshot", "prends un screenshot", "screenshot",
+            "capture d ecran", "capture ecran",
+            "prendre une capture", "prends une capture"
+        ]
+    },
+    "navigation_proactive": {
+        "actif": True,
+        "systeme_maison": "auto",
+        "annoncer_arrivee_systeme": True,
+        "annoncer_honk": True
+    },
+    "synonymes_verbes": {
+        "ouvrir_activer": [
+            "activer", "afficher", "ouvrir", "lancer", "éjecter", "mettre",
+            "passer", "allumer", "démarrer", "montrer", "rétablir", "remettre"
+        ],
+        "fermer_desactiver": [
+            "désactiver", "fermer", "enlever", "masquer", "cacher", "supprimer",
+            "effacer", "couper", "éteindre", "quitter", "retirer", "arrêter"
+        ],
+        "sortir_prendre": [
+            "sortir", "prendre", "équiper", "déployer", "dégainer"
+        ],
+        "ranger_rentrer": [
+            "ranger", "rengainer", "rentrer", "rétracter", "cacher"
+        ],
+        "changer_suivant": [
+            "changer", "basculer", "alterner", "inverser"
+        ],
+        "charger_utiliser": [
+            "utiliser", "charger", "recharger"
+        ]
+    },
+    "synonymes_objets": {
+        "roue insight": "menu insight",
+        "roue d insight": "menu insight",
+        "roue emoticone": "roue d emoticomes",
+        "roue emoticones": "roue d emoticomes",
+        "roue d emoticone": "roue d emoticomes",
+        "roue d emoticones": "roue d emoticomes",
+        "fss": "acs",
+        "mode fss": "mode acs",
+        "torche": "phares",
+        "lampe": "phares",
+        "lampe torche": "phares"
+    }
 }
 
 _SECRETS_DEFAUT = {
@@ -80,6 +192,14 @@ TOUCHE_MICRO: str = config_data.get("raccourci_ptt", "ctrl+shift+f9")
 DELAIS_CLAVIER: dict = config_data.get("delais_clavier", _CONFIG_DEFAUT["delais_clavier"])
 NOMS_VAISSEAUX: dict = config_data.get("noms_vaisseaux", {})
 COMMANDES_MODES: dict = config_data.get("commandes_modes", {})
+HUD_CONFIG: dict = {**_CONFIG_DEFAUT["hud"], **config_data.get("hud", {})}
+VISION_CONFIG: dict = {**_CONFIG_DEFAUT["vision"], **config_data.get("vision", {})}
+NAVIGATION_CONFIG: dict = {**_CONFIG_DEFAUT["navigation_proactive"], **config_data.get("navigation_proactive", {})}
+SYNONYMES_VERBES: dict = {**_CONFIG_DEFAUT["synonymes_verbes"], **config_data.get("synonymes_verbes", {})}
+SYNONYMES_OBJETS: dict = {**_CONFIG_DEFAUT["synonymes_objets"], **config_data.get("synonymes_objets", {})}
+DOSSIER_PHOTOS_ED: str = os.path.expandvars(
+    VISION_CONFIG.get("dossier_photos", _CONFIG_DEFAUT["vision"]["dossier_photos"])
+)
 
 # Secrets et API
 CLE_API_OPENAI: str = secrets_data.get("openai_api_key", "")

@@ -68,10 +68,22 @@ def formater_ponctuation_dictee(texte: str) -> str:
 class GestionnaireModesTexte:
     """Gère l'état et l'aiguillage des modes de saisie directe (Dictée et Épellation)."""
 
-    def __init__(self):
+    def __init__(self, hud=None):
         self.mode_actuel = MODE_NORMAL
         self.historique_blocs_dictee = []
         self.premier_bloc_dictee = True
+        self.buffer_epellation = ""
+        self.hud = hud
+
+    def _maj_hud_dictee(self):
+        """Met à jour la prévisualisation HUD du mode Dictée."""
+        if self.hud:
+            self.hud.afficher_dictee("".join(self.historique_blocs_dictee))
+
+    def _maj_hud_epellation(self):
+        """Met à jour la prévisualisation HUD du mode Épellation dès la ligne 1."""
+        if self.hud:
+            self.hud.afficher_epellation(self.buffer_epellation)
 
     def est_mode_special(self) -> bool:
         return self.mode_actuel != MODE_NORMAL
@@ -80,11 +92,16 @@ class GestionnaireModesTexte:
         self.mode_actuel = MODE_DICTEE
         self.historique_blocs_dictee.clear()
         self.premier_bloc_dictee = True
+        if self.hud:
+            self.hud.effacer_contenu()
         dire_vocal(reponse_vocale)
         print("[Mode Dictée] ACTIF (Talkie-walkie HOTAS. Ordres : Stop | Corriger | Effacer | Envoi / Envoyer le message)")
 
     def activer_epellation(self, reponse_vocale="Mode épellation activé."):
         self.mode_actuel = MODE_EPELLATION
+        self.buffer_epellation = ""
+        if self.hud:
+            self.hud.effacer_contenu()
         dire_vocal(reponse_vocale)
         print("[Mode Épellation] ACTIF (Talkie-walkie HOTAS. Ordres : Stop | Corriger | Effacer | Envoi / Valider)")
 
@@ -92,6 +109,7 @@ class GestionnaireModesTexte:
         self.mode_actuel = MODE_NORMAL
         self.historique_blocs_dictee.clear()
         self.premier_bloc_dictee = True
+        self.buffer_epellation = ""
         dire_vocal(message_vocal)
 
     def traiter_segment_dictee(self, seg_brut: str):
@@ -133,6 +151,7 @@ class GestionnaireModesTexte:
                 effacer_dernier_bloc_exact(len(dernier_texte))
                 if not self.historique_blocs_dictee:
                     self.premier_bloc_dictee = True
+                self._maj_hud_dictee()
                 print(f"[Mode Dictée] Dernier bloc supprimé ({len(dernier_texte)} car.) : '{dernier_texte}'")
             else:
                 print("[Mode Dictée] Aucun bloc à corriger.")
@@ -144,6 +163,7 @@ class GestionnaireModesTexte:
             appuyer_touche_vk(VK_DELETE, 1)
             self.historique_blocs_dictee.clear()
             self.premier_bloc_dictee = True
+            self._maj_hud_dictee()
             print("[Mode Dictée] Tout le texte a été effacé.")
             return
 
@@ -152,6 +172,7 @@ class GestionnaireModesTexte:
             appuyer_touche_vk(VK_RETURN, 1)
             self.historique_blocs_dictee.append("\n")
             self.premier_bloc_dictee = True
+            self._maj_hud_dictee()
             print("[Mode Dictée] Paragraphe suivant.")
             return
 
@@ -168,6 +189,7 @@ class GestionnaireModesTexte:
                 appuyer_touche_vk(VK_RETURN, 1)
                 self.historique_blocs_dictee.append("\n")
                 self.premier_bloc_dictee = True
+                self._maj_hud_dictee()
                 print("[Mode Dictée] Paragraphe suivant.")
                 return
 
@@ -196,6 +218,8 @@ class GestionnaireModesTexte:
             self.historique_blocs_dictee.append("\n")
             self.premier_bloc_dictee = True
             print("[Mode Dictée] Paragraphe suivant (enchaîné).")
+
+        self._maj_hud_dictee()
 
     def traiter_segment_epellation(self, seg_brut: str):
         """Épelle les lettres/chiffres dans le champ de recherche ou exécute un ordre vocal."""
@@ -233,6 +257,8 @@ class GestionnaireModesTexte:
         # 3a. Correction de mot ("corriger mot", "effacer mot", "efface mot")
         if re.search(r'\b(?:corriger|effacer|efface)\s+(?:le\s+)?mot\b', cmd_propre):
             envoyer_raccourci_ctrl(VK_BACK)
+            self.buffer_epellation = re.sub(r'\s*\S+\s*$', '', self.buffer_epellation)
+            self._maj_hud_epellation()
             print("[Épellation] Mot précédent effacé (Ctrl+Retour arrière).")
             return
 
@@ -246,12 +272,16 @@ class GestionnaireModesTexte:
             nb_fois = int(val_str) if val_str.isdigit() else nombres_fr.get(val_str, 1)
             nb_fois = min(max(nb_fois, 1), 20)
             appuyer_touche_vk(VK_BACK, nb_fois)
+            self.buffer_epellation = self.buffer_epellation[:-nb_fois] if nb_fois < len(self.buffer_epellation) else ""
+            self._maj_hud_epellation()
             print(f"[Épellation] Correction multiple : {nb_fois} caractères effacés.")
             return
 
         # 3c. Correction simple d'un caractère ("corriger", "retour", "effacer lettre")
         if cmd_propre in corr_epel:
             appuyer_touche_vk(VK_BACK, 1)
+            self.buffer_epellation = self.buffer_epellation[:-1]
+            self._maj_hud_epellation()
             print("[Épellation] Dernier caractère effacé.")
             return
 
@@ -259,6 +289,8 @@ class GestionnaireModesTexte:
         if cmd_propre in eff_epel:
             envoyer_raccourci_ctrl(VK_A)
             appuyer_touche_vk(VK_DELETE, 1)
+            self.buffer_epellation = ""
+            self._maj_hud_epellation()
             print("[Épellation] Champ effacé.")
             return
 
@@ -266,6 +298,8 @@ class GestionnaireModesTexte:
         mots_tiret_isole = {"tiret", "tirer", "tirez", "trait dunion", "trait d'union", "moins", "-"}
         if cmd_propre in mots_tiret_isole or seg_brut.strip() == "-":
             taper_caractere_unicode("-")
+            self.buffer_epellation += "-"
+            self._maj_hud_epellation()
             print("[Épellation -> Tapé] -")
             return
 
@@ -273,12 +307,16 @@ class GestionnaireModesTexte:
         mots_point_isole = {"point", "."}
         if cmd_propre in mots_point_isole or seg_brut.strip() == ".":
             taper_caractere_unicode(".")
+            self.buffer_epellation += "."
+            self._maj_hud_epellation()
             print("[Épellation -> Tapé] .")
             return
 
         # 7. RÈGLE DU SEGMENT ISOLÉ ESPACE
         if cmd_propre in {"espace", "espace."}:
             taper_caractere_unicode(" ")
+            self.buffer_epellation += " "
+            self._maj_hud_epellation()
             print("[Épellation -> Tapé] [Espace]")
             return
 
@@ -379,4 +417,6 @@ class GestionnaireModesTexte:
                     caracteres_tapes += ch
 
         if caracteres_tapes:
+            self.buffer_epellation += caracteres_tapes
+            self._maj_hud_epellation()
             print(f"[Épellation -> Tapé] {caracteres_tapes}")

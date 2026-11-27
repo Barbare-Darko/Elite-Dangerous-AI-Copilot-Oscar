@@ -8,6 +8,8 @@ secrets.json
 # ==============================================================================
 data/journal_de_bord.txt
 data/flotte_cmdr.json
+data/hud_positions.json
+data/codex_cmdr.json
 data/flotte_cmdr_json_old.txt
 data/commandes_vaisseau - SAVE.txt
 VoiceAttack.dat
@@ -30,3 +32,9 @@ modules/__pycache__/
 .venv/
 venv/
 env/
+
+# ==============================================================================
+# SUIVI DE PROJET ET INSTRUCTIONS IA LOCALES (PRIVÉS)
+# ==============================================================================
+ROADMAP.md
+GEMINI.md
